@@ -7,45 +7,44 @@ namespace BusinessObject.Models
     public class Job
     {
         [Key]
-        [Column("job_id")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int JobId { get; set; }
 
         [Required]
-        [MaxLength(255)]
-        [Column("job_title")]
+        [MaxLength(200)]
         public string? Title { get; set; }
 
         [Required]
-        [Column("job_description")]
+        [MaxLength(1000)]
         public string? Description { get; set; }
 
-        [Required]
-        [Column("job_requirements")]
-        public string? JobRequirements { get; set; }
+        [MaxLength(200)]
+        public string? Industry { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        [Column("job_location")]
+        [MaxLength(200)]
         public string? Location { get; set; }
 
-        [Column("job_salary")]
-        [DataType(DataType.Currency)]
-        [DisplayFormat(DataFormatString = "{0:C}")]
-        public decimal Salary { get; set; }
-
         [Required]
-        [DataType(DataType.Date)]
-        [Column("application_deadline")]
         public DateTime ApplicationDeadline { get; set; }
 
-        [Required]
-        [Column("job_time_type")]
+        [MaxLength(100)]
+        public string? RequiredSkills { get; set; }
+
+        [MaxLength(100)]
+        public string? RequiredEducation { get; set; }
+
+        [Range(0, Double.MaxValue)]
+        public decimal Salary { get; set; }
+
         public TimeType TimeType { get; set; }
 
-        [ForeignKey("comp_id")]
+        public int EmployerId { get; set; }
+
+        [ForeignKey("EmployerId")]
         public Employer? Employer { get; set; }
 
-        public List<JobApplicant>? JobApplicants { get; set; }
+        public virtual ICollection<JobApplicant>? JobApplications { get; set; }
+
+        public virtual ICollection<SavedJobs>? SavedJobs { get; set; }
     }
 }

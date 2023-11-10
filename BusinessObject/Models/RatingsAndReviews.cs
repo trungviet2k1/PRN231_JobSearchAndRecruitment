@@ -1,25 +1,29 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using BusinessObject.Commons;
 
 namespace BusinessObject.Models
 {
-    public class JobApplicant
+    public class RatingsAndReviews
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int JobApplicationId { get; set; }
+        public int RatingId { get; set; }
 
         public int JobSeekerId { get; set; }
 
-        public int JobId { get; set; }
+        public int EmployerId { get; set; }
 
-        public JobApplicationStatus ApplicationStatus { get; set; }
+        [Range(1, 5)]
+        public int? Rating { get; set; }
+
+        [MaxLength(1000)]
+        public string? Comment { get; set; }
 
         [ForeignKey("JobSeekerId")]
         public JobSeeker? JobSeeker { get; set; }
 
-        [ForeignKey("JobId")]
-        public Job? Job { get; set; }
+        [ForeignKey("EmployerId")]
+        public Employer? Employer { get; set; }
+
     }
 }

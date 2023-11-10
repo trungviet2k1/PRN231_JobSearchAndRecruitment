@@ -6,22 +6,21 @@ namespace BusinessObject.Models
     public class Resume
     {
         [Key]
-        [Column("resume_id")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int ResumeId { get; set; }
 
-        [Required]
+        public int JobSeekerId { get; set; }
+
         [MaxLength(100)]
-        [Column("resume_title")]
-        public string? Title { get; set; }
+        public string? DocumentName { get; set; }
 
-        [Column("resume_content")]
-        public string? Content { get; set; }
+        [MaxLength(200)]
+        public string? DocumentPath { get; set; }
 
-        [Column("resume_url")]
-        public string? ResumeUrl { get; set; }
+        [MaxLength(1000)]
+        public string? Description { get; set; }
 
-        [ForeignKey("job_seeker_id")]
+        [ForeignKey("JobSeekerId")]
         public JobSeeker? JobSeeker { get; set; }
     }
 }

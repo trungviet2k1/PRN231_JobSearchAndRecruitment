@@ -6,30 +6,40 @@ namespace BusinessObject.Models
     public class JobSeeker
     {
         [Key]
-        [Column("job_seeker_id")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int JobSeekerId { get; set; }
 
         [Required]
         [MaxLength(100)]
-        [Column("full_name")]
         public string? FullName { get; set; }
 
         [Required]
         [MaxLength(100)]
-        [Column("address")]
-        public string? Address { get; set; }
+        [EmailAddress]
+        public string? Email { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        public string? Password { get; set; }
 
         [Phone]
-        [Column("phone")]
+        [MaxLength(15)]
         public string? PhoneNumber { get; set; }
 
-        [Column("resume_url")]
-        public string? ResumeUrl { get; set; }
+        public string? Address { get; set; }
 
-        [Column("skills")]
-        public string? Skills { get; set; }
+        public string? ProfileDescription { get; set; }
 
-        public List<Resume>? Resumes { get; set; }
+        public string? Education { get; set; }
+
+        public string? WorkExperience { get; set; }
+
+        public bool IsEmployer { get; set; }
+
+        public virtual ICollection<JobApplicant> JobApplications { get; set; }
+
+        public virtual ICollection<SavedJobs> SavedJobs { get; set; }
+
+        public virtual ICollection<Resume> Resumes { get; set; }
     }
 }

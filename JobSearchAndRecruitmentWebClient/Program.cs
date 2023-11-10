@@ -1,3 +1,5 @@
+using JobSearchAndRecruitmentWebClient.Controllers;
+
 namespace JobSearchAndRecruitmentWebClient
 {
     public class Program
@@ -9,6 +11,12 @@ namespace JobSearchAndRecruitmentWebClient
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddHttpClient<JobSeekerController>();
+            builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -16,9 +24,12 @@ namespace JobSearchAndRecruitmentWebClient
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthorization();
 

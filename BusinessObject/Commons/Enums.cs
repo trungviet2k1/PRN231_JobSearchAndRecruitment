@@ -1,9 +1,8 @@
 ﻿namespace BusinessObject.Commons
 {
-    public enum UserType
+    public class Enums
     {
-        JobSeeker,
-        Employer
+        public static readonly string SESSION_KEY_JOB_SEEKER = "_JobSeeker";
     }
 
     public enum JobApplicationStatus
@@ -19,9 +18,8 @@
         FullTime,
         PartTime,
         Contract,
-        Freelance,
-        Flexible,
         Internship,
-        Other
+        Temporary,
+        Remote
     }
 }

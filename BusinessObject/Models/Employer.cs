@@ -1,32 +1,49 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using BusinessObject.Commons;
 
 namespace BusinessObject.Models
 {
     public class Employer
     {
         [Key]
-        [Column("comp_id")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int EmployerId { get; set; }
 
         [Required]
         [MaxLength(100)]
-        [Column("comp_name")]
         public string? CompanyName { get; set; }
 
         [Required]
         [MaxLength(100)]
-        [Column("comp_address")]
-        public string? CompanyAddress { get; set; }
+        public string? FullName { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        [EmailAddress]
+        public string? Email { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        public string? Password { get; set; }
 
         [Phone]
-        [Column("comp_phone")]
-        public string? CompanyPhoneNumber { get; set; }
+        [MaxLength(15)]
+        public string? PhoneNumber { get; set; }
 
-        [Column("comp_logoURL")]
-        public string? CompanyLogoUrl { get; set; }
+        [MaxLength(200)]
+        public string? CompanyWebsite { get; set; }
 
-        public List<Job>? Jobs { get; set; }
+        [MaxLength(200)]
+        public string? Industry { get; set; }
+
+        [MaxLength(1000)]
+        public string? CompanyDescription { get; set; }
+
+        public virtual ICollection<Job>? Jobs { get; set; }
+
+        public virtual ICollection<JobApplicant>? JobApplications { get; set; }
+
+        public virtual ICollection<RatingsAndReviews>? RatingsAndReviews { get; set; }
     }
 }

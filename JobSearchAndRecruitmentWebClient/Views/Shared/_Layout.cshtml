@@ -1,30 +1,83 @@
-﻿<!DOCTYPE html>
+﻿@using BusinessObject.Commons;
+@using BusinessObject.DTOs
+@using Newtonsoft.Json;
+@using Microsoft.AspNetCore.Http;
+@{
+    var isHome = ViewContext.RouteData.Values["Controller"].ToString() == "Home" &&
+                  ViewContext.RouteData.Values["Action"].ToString() == "Index";
+
+    var httpContext = Context.Request.HttpContext;
+    var userJson = httpContext.Session.GetString(Enums.SESSION_KEY_JOB_SEEKER);
+    JobSeeker currentUser = null;
+    if(userJson != null)
+    {
+        currentUser = JsonConvert.DeserializeObject<JobSeeker>(userJson);
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - JobSearchAndRecruitmentWebClient</title>
+    <title>@ViewData["Title"] - Job Search & Recruitment</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/JobSearchAndRecruitmentWebClient.styles.css" asp-append-version="true" />
+    <style>
+        .nav-link {
+            position: relative;
+        }
+
+            .nav-link::before {
+                content: "";
+                width: 0;
+                height: 2px;
+                background-color: #007BFF;
+                position: absolute;
+                bottom: -9px;
+                left: 0;
+            }
+
+        .nav-item.active .nav-link::before, .nav-item:hover .nav-link::before {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">JobSearchAndRecruitmentWebClient</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Job Search & Recruitment</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                        <li class="nav-item @(isHome ? "active" : "")">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (currentUser != null)
+                        {
+                            <li class="nav-item" style="pointer-events: none;">
+                                <a class="nav-link text-dark" style="pointer-events: none;">
+                                    <span style="font-weight: normal;">Hello, @currentUser.FullName</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold text-primary" asp-area="" asp-controller="JobSeeker" asp-action="Logout">Log Out</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link font-weight-bold text-primary" asp-area="" asp-controller="JobSeeker" asp-action="Login">Log In</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -38,7 +91,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - JobSearchAndRecruitmentWebClient - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - Job Search & Recruitment - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

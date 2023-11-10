@@ -1,17 +1,64 @@
+using BusinessObject.Models;
+using BusinessObject;
+using DataAccess.DAO;
+using Microsoft.AspNetCore.OData;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
+using Service.IRepository;
+using Service.Repository;
+
 namespace JobSearchAndRecruitmentWebAPI
 {
     public class Program
     {
         public static void Main(string[] args)
         {
+            static IEdmModel GetEdmModel()
+            {
+                ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+                builder.EntitySet<JobSeeker>("JobSeeker");
+                builder.EntitySet<Employer>("Employer");
+                builder.EntitySet<Job>("Job");
+                builder.EntitySet<JobApplicant>("JobApplicant").EntityType.HasKey(j => j.JobApplicationId);
+                builder.EntitySet<SavedJobs>("SavedJobs").EntityType.HasKey(s => s.SavedJobId);
+                builder.EntitySet<Notifications>("Notifications").EntityType.HasKey(n => n.NotificationId);
+                builder.EntitySet<Resume>("Resume").EntityType.HasKey(re => re.ResumeId);
+                builder.EntitySet<RatingsAndReviews>("RatingsAndReviews").EntityType.HasKey(ra => ra.RatingId);
+
+                return builder.GetEdmModel();
+            }
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            builder.Services.AddControllers().AddOData(options =>
+            {
+                options.Select().Filter().Count().OrderBy().Expand().SetMaxTop(100);
+
+                options.EnableQueryFeatures();
+                var routeOptions = options.AddRouteComponents("odata", GetEdmModel()).RouteOptions;
+
+                routeOptions.EnableQualifiedOperationCall = true;
+                routeOptions.EnableKeyInParenthesis = false;
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddApplication();
+
+            builder.Services.AddDbContext<PRN231_ProjectDbContext>(opt =>
+            opt.UseSqlServer(builder.Configuration.GetConnectionString("DbConnect")));
+
+            builder.Services.AddScoped<JobSeekerDAO>();
+
+            builder.Services.AddScoped<IJobSeekerRepository, JobSeekerRepository>();
+
+            builder.Services.AddCors();
 
             var app = builder.Build();
 
@@ -22,8 +69,11 @@ namespace JobSearchAndRecruitmentWebAPI
                 app.UseSwaggerUI();
             }
 
-            app.UseAuthorization();
+            app.UseODataBatching();
+            app.UseRouting();
+            app.UseHttpsRedirection();
 
+            app.UseAuthorization();
 
             app.MapControllers();
 

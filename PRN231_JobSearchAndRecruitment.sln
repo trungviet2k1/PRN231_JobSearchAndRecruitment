@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{8B54922E-A2D3-43D8-B004-AA6E5060C7CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobSearchAndRecruitmentWebAPI", "JobSearchAndRecruitmentWebAPI\JobSearchAndRecruitmentWebAPI.csproj", "{7031EB76-07E3-404A-90B1-184C60C50695}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobSearchAndRecruitmentWebAPI", "JobSearchAndRecruitmentWebAPI\JobSearchAndRecruitmentWebAPI.csproj", "{7031EB76-07E3-404A-90B1-184C60C50695}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobSearchAndRecruitmentWebClient", "JobSearchAndRecruitmentWebClient\JobSearchAndRecruitmentWebClient.csproj", "{16AE2D59-016E-447B-AB93-6DA1AADC6D8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobSearchAndRecruitmentWebClient", "JobSearchAndRecruitmentWebClient\JobSearchAndRecruitmentWebClient.csproj", "{16AE2D59-016E-447B-AB93-6DA1AADC6D8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -14,12 +14,14 @@ namespace BusinessObject.Models
         { 
         }
 
-        public DbSet<Account> Accounts { get; set; }
-        public DbSet<JobSeeker> JobSeekers { get; set; }
-        public DbSet<Resume> Resumes { get; set; }
         public DbSet<Employer> Employers { get; set; }
         public DbSet<Job> Jobs { get; set; }
         public DbSet<JobApplicant> JobApplicants { get; set; }
+        public DbSet<JobSeeker> JobSeekers { get; set; }
+        public DbSet<Notifications> Notifications { get; set; }
+        public DbSet<RatingsAndReviews> RatingsAndReviews { get; set; }
+        public DbSet<Resume> Resumes { get; set; }
+        public DbSet<SavedJobs> SavedJobs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

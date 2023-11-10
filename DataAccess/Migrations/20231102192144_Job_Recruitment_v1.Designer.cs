@@ -4,6 +4,7 @@ using BusinessObject.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(PRN231_ProjectDbContext))]
-    partial class PRN231_ProjectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231102192144_Job_Recruitment_v1")]
+    partial class Job_Recruitment_v1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,9 +73,35 @@ namespace DataAccess.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
                     b.HasKey("EmployerId");
 
                     b.ToTable("Employers");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.FollowedEmployers", b =>
+                {
+                    b.Property<int>("FollowedEmployerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FollowedEmployerId"));
+
+                    b.Property<int>("EmployerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JobSeekerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FollowedEmployerId");
+
+                    b.HasIndex("EmployerId");
+
+                    b.HasIndex("JobSeekerId");
+
+                    b.ToTable("FollowedEmployers");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Job", b =>
@@ -172,23 +201,29 @@ namespace DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("JobSeekerId"));
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Education")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<bool>("IsEmployer")
-                        .HasColumnType("bit");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -201,10 +236,17 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("ProfileDescription")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
 
                     b.Property<string>("WorkExperience")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.HasKey("JobSeekerId");
 
@@ -326,6 +368,25 @@ namespace DataAccess.Migrations
                     b.ToTable("SavedJobs");
                 });
 
+            modelBuilder.Entity("BusinessObject.Models.FollowedEmployers", b =>
+                {
+                    b.HasOne("BusinessObject.Models.Employer", "Employer")
+                        .WithMany()
+                        .HasForeignKey("EmployerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.Models.JobSeeker", "JobSeeker")
+                        .WithMany("FollowedEmployers")
+                        .HasForeignKey("JobSeekerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employer");
+
+                    b.Navigation("JobSeeker");
+                });
+
             modelBuilder.Entity("BusinessObject.Models.Job", b =>
                 {
                     b.HasOne("BusinessObject.Models.Employer", "Employer")
@@ -438,6 +499,8 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("BusinessObject.Models.JobSeeker", b =>
                 {
+                    b.Navigation("FollowedEmployers");
+
                     b.Navigation("JobApplications");
 
                     b.Navigation("Resumes");
