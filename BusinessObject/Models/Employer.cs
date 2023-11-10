@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using BusinessObject.Commons;
 
 namespace BusinessObject.Models
 {
@@ -39,6 +38,7 @@ namespace BusinessObject.Models
 
         [MaxLength(1000)]
         public string? CompanyDescription { get; set; }
+        public bool IsEmployer { get; set; }
 
         public virtual ICollection<Job>? Jobs { get; set; }
 

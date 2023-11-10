@@ -11,6 +11,6 @@ namespace BusinessObject.DTOs
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; } = null!;
 
-        public bool IsEmployer { get; set; } = true;
+        public bool IsEmployer { get; set; } = false;
     }
 }

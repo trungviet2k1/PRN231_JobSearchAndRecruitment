@@ -13,6 +13,7 @@ namespace Service.Repository
         {
             _jobSeekerDAO = jobSeekerDAO;
         }
+
         public void CreateJobSeeker(JobSeekerRegisterDTO jobSeekerDTO) => _jobSeekerDAO.CreateJobSeeker(jobSeekerDTO);
 
         public List<JobSeekerDTO> GetAllJobSeekers() => _jobSeekerDAO.GetAllJobSeekers();

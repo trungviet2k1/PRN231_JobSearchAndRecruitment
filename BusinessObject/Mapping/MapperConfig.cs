@@ -8,9 +8,9 @@ namespace BusinessObject.Mapping
     {
         public MapperConfig()
         {
-            CreateMap<Employer, LoginDTO>().ReverseMap();
             CreateMap<JobSeeker, JobSeekerDTO>().ReverseMap();
             CreateMap<JobSeeker, JobSeekerRegisterDTO>().ReverseMap();
+            CreateMap<Employer, EmployeeDTO>().ReverseMap();
             CreateMap<Employer, EmployerRegisterDTO>().ReverseMap();
         }
     }

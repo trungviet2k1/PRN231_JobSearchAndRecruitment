@@ -36,10 +36,10 @@ namespace BusinessObject.Models
 
         public bool IsEmployer { get; set; }
 
-        public virtual ICollection<JobApplicant> JobApplications { get; set; }
+        public virtual ICollection<JobApplicant>? JobApplications { get; set; }
 
-        public virtual ICollection<SavedJobs> SavedJobs { get; set; }
+        public virtual ICollection<SavedJobs>? SavedJobs { get; set; }
 
-        public virtual ICollection<Resume> Resumes { get; set; }
+        public virtual ICollection<Resume>? Resumes { get; set; }
     }
 }

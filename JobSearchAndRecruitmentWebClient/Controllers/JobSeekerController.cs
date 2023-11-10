@@ -46,11 +46,13 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
 
             if (currentJobSeeker != null)
             {
-                if (currentJobSeeker.IsEmployer)
+                if (currentJobSeeker.IsEmployer == false)
                 {
                     HttpContext.Session.SetString(Enums.SESSION_KEY_JOB_SEEKER, System.Text.Json.JsonSerializer.Serialize(currentJobSeeker));
                     return Redirect("/Home/Index");
                 }
+                ViewData["Error"] = "This is not a \"Job Search\" account!! Please check your account again.";
+                return Login();
             }
 
             ViewData["Error"] = "Email or password is incorrect! Please re-enter!";

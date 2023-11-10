@@ -1,7 +1,8 @@
 ﻿@using BusinessObject.Commons;
 @using BusinessObject.DTOs
-@using Newtonsoft.Json;
-@using Microsoft.AspNetCore.Http;
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Http
+
 @{
     var isHome = ViewContext.RouteData.Values["Controller"].ToString() == "Home" &&
                   ViewContext.RouteData.Values["Action"].ToString() == "Index";
@@ -9,7 +10,7 @@
     var httpContext = Context.Request.HttpContext;
     var userJson = httpContext.Session.GetString(Enums.SESSION_KEY_JOB_SEEKER);
     JobSeeker currentUser = null;
-    if(userJson != null)
+    if (userJson != null)
     {
         currentUser = JsonConvert.DeserializeObject<JobSeeker>(userJson);
     }
@@ -22,6 +23,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Job Search & Recruitment</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/fontawesome/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/JobSearchAndRecruitmentWebClient.styles.css" asp-append-version="true" />
     <style>
@@ -32,10 +34,10 @@
             .nav-link::before {
                 content: "";
                 width: 0;
-                height: 2px;
+                height: 3px;
                 background-color: #007BFF;
                 position: absolute;
-                bottom: -9px;
+                bottom: -8px;
                 left: 0;
             }
 
@@ -62,14 +64,20 @@
                     <ul class="navbar-nav">
                         @if (currentUser != null)
                         {
-                            <li class="nav-item" style="pointer-events: none;">
-                                <a class="nav-link text-dark" style="pointer-events: none;">
-                                    <span style="font-weight: normal;">Hello, @currentUser.FullName</span>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-dark" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-user"></i>
                                 </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link font-weight-bold text-primary" asp-area="" asp-controller="JobSeeker" asp-action="Logout">Log Out</a>
+                                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                                    <strong class="dropdown-header">Hello, @currentUser.FullName!</strong>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Resumes</a>
+                                    <a class="dropdown-item" href="#">My job</a>
+                                    <a class="dropdown-item" href="#">My reviews</a>
+                                    <a class="dropdown-item" href="#">Setting</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item font-weight-bold text-primary" asp-area="" asp-controller="JobSeeker" asp-action="Logout">Log Out</a>
+                                </div>
                             </li>
                         }
                         else
@@ -78,6 +86,15 @@
                                 <a class="nav-link font-weight-bold text-primary" asp-area="" asp-controller="JobSeeker" asp-action="Login">Log In</a>
                             </li>
                         }
+                        <li class="nav-item" style="pointer-events: none;">
+                            <a class="nav-link text-dark" style="pointer-events: none;">
+                                <span style="font-weight: normal;"> | </span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link font-weight-bold" asp-area="" asp-controller="Employee" asp-action="Home">Recruiter/Job Posting</a>
+                        </li>
                     </ul>
                 </div>
             </div>
