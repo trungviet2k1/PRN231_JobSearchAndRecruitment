@@ -60,9 +60,15 @@ namespace DataAccess.DAO
             var existingJobSeeker = dbContext.JobSeekers.FirstOrDefault(j => j.JobSeekerId == jobSeekerDTO.JobSeekerId);
             if (existingJobSeeker != null)
             {
-                mapper.Map(jobSeekerDTO, existingJobSeeker);
+             var upd =   mapper.Map(jobSeekerDTO, existingJobSeeker);
+                dbContext.JobSeekers.Update(upd); 
                 dbContext.SaveChanges();
             }
+
         }
+
+
+
+
     }
 }

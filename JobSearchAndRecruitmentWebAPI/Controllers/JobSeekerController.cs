@@ -16,7 +16,7 @@ namespace JobSearchAndRecruitmentWebAPI.Controllers
         }
 
         [EnableQuery]
-        public IActionResult Get()
+        public IActionResult Get()  
         {
             return Ok(_jobSeekerRepository.GetAllJobSeekers());
         }

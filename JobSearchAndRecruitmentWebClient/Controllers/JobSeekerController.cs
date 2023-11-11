@@ -87,5 +87,11 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
+
+       public IActionResult ViewProfile()
+        {
+            return View();  
+        }
+
     }
 }

@@ -1,0 +1,46 @@
+﻿@page
+@using JobSearchAndRecruitmentWebClient.Models.JobSeeker
+
+@{
+    Layout = "_LayoutJobSeeker"; ; // Không sử dụng layout
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Job Seeker Page</title>
+    <!-- Thêm các thư viện Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Job Seeker Information</h2>
+    
+    <form>
+        <div class="form-group">
+            <label for="FullName">Full Name:</label>
+                <input type="text" class="form-control" id="FullName" value="@JobSeeker.FullName" readonly>
+        </div>
+        <div class="form-group">
+            <label for="Email">Email:</label>
+                <input type="email" class="form-control" id="Email" value="@JobSeeker.Email" readonly>
+        </div>
+        <div class="form-group">
+            <label for="Password">Password:</label>
+                <input type="password" class="form-control" id="Password" value="@JobSeeker.Password" readonly>
+        </div>
+        <div class="form-group">
+            <label for="PhoneNumber">Phone Number:</label>
+                <input type="tel" class="form-control" id="PhoneNumber" value="@JobSeeker.PhoneNumber" readonly>
+        </div>
+    </form>
+</div>
+
+<!-- Thêm các thư viện Bootstrap JavaScript -->
+
+
+</body>
+</html>

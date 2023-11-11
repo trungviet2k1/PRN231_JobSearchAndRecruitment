@@ -17,5 +17,13 @@
         public string PhoneNumber { get; set; } = null!;
 
         public bool IsEmployer { get; set; } = false;
+
+        public string? Address { get; set; } 
+
+        public string? ProfileDescription { get; set; } 
+
+        public string? Education { get; set; } 
+
+        public string? WorkExperience { get; set; } 
     }
 }
