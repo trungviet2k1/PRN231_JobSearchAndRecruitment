@@ -34,7 +34,7 @@ namespace JobSearchAndRecruitmentWebAPI.Controllers
             return Ok();
         }
 
-        [Route("odata/Employee/Login")]
+        [Route("odata/Employer/Login")]
         [HttpPost]
         [EnableQuery]
         public IActionResult Login([FromBody] EmployerLogin employerLogin)
@@ -51,7 +51,7 @@ namespace JobSearchAndRecruitmentWebAPI.Controllers
             }
         }
 
-        [Route("odata/Employee/Register")]
+        [Route("odata/Employer/Register")]
         [HttpPost]
         [EnableQuery]
         public IActionResult Register([FromBody] EmployerDTO register)

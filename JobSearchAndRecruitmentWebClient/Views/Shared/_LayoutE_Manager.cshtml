@@ -1,0 +1,125 @@
+﻿@using BusinessObject.Commons;
+@using Newtonsoft.Json;
+@{
+    var httpContext = Context.Request.HttpContext;
+    var userJson = httpContext.Session.GetString(Enums.SESSION_KEY_EMPLOYER);
+    Employer currentUser = null;
+    if (userJson != null)
+    {
+        currentUser = JsonConvert.DeserializeObject<Employer>(userJson);
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Job Search & Recruitment</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/fontawesome/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/JobSearchAndRecruitmentWebClient.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="offcanvas offcanvas-start bg-dark text-white" id="demo" style="width: 250px;">
+        <div class="offcanvas-header">
+            <span class="offcanvas-title">Zoom out</span>
+            <button type="button" class="btn btn-outline-light btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <a class="btn btn-outline-light w-100 mb-2 d-flex align-items-start" asp-area="" asp-controller="Employer" asp-action="Manager">
+                <i class="fas fa-briefcase me-2"></i> Jobs
+            </a>
+            <button type="button" class="btn btn-outline-light w-100 mb-2 d-flex align-items-start">
+                <i class="fas fa-user me-2"></i> Candidate
+            </button>
+            <button type="button" class="btn btn-outline-light w-100 mb-2 d-flex align-items-start">
+                <i class="fas fa-calendar-alt me-2"></i> Interview
+            </button>
+            <button type="button" class="btn btn-outline-light w-100 mb-2 d-flex align-items-start">
+                <i class="fas fa-chart-bar me-2"></i> Analysis
+            </button>
+        </div>
+    </div>
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <button class="btn btn-toolbar" type="button" data-bs-toggle="offcanvas" data-bs-target="#demo">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" asp-area="" asp-controller="Employer" asp-action="Manager">Job Search & Recruitment</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item"></li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item" style="pointer-events: none; display: flex; align-items: center; margin-right: 10px;">
+                            <a class="nav-link text-dark">
+                                <i class="fas fa-building"></i>
+                            </a>
+                            <div style="display: flex; flex-direction: column;">
+                                <div style="font-size: 80%; text-align: start;">
+                                    <strong>@currentUser.CompanyName</strong>
+                                </div>
+                                <div style="font-size: 70%; text-align: start;">Owner: @currentUser.FullName</div>
+                            </div>
+                        </li>
+                        <li class="nav-item" style="pointer-events: none;">
+                            <a class="nav-link text-dark" style="pointer-events: none;">
+                                <span style="font-weight: normal;"> | </span>
+                            </a>
+                        </li>
+                        @if (currentUser != null)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-dark" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-user"></i> @currentUser.Email
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                                    <strong class="dropdown-header">@currentUser.CompanyName</strong>
+                                    <a class="dropdown-item mar" href="#">
+                                        <i class="fas fa-cogs" style="margin-right: 5px;"></i> Employer settings
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-pager" style="margin-right: 5px;"></i> Company page
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <strong class="dropdown-header">@currentUser.Email</strong>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-cogs" style="margin-right: 5px;"></i> Account settings
+                                    </a>
+                                    <a class="dropdown-item font-weight-bold text-primary" asp-area="" asp-controller="Employer" asp-action="Logout">
+                                        <i class="fas fa-sign-out-alt" style="margin-right: 5px;"></i> Log Out
+                                    </a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - Job Search & Recruitment - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

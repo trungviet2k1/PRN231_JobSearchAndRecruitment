@@ -30,6 +30,11 @@ namespace JobSearchAndRecruitmentWebAPI.Controllers
         [EnableQuery]
         public IActionResult Put(int key, [FromBody] JobSeekerDTO jobSeekerDTO)
         {
+            if (key != jobSeekerDTO.JobSeekerId)
+            {
+                return BadRequest("Invalid key");
+            }
+
             _jobSeekerRepository.UpdateJobSeeker(jobSeekerDTO);
             return Ok();
         }
