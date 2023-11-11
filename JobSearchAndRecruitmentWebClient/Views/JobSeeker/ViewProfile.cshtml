@@ -1,8 +1,17 @@
-﻿@page
-@using JobSearchAndRecruitmentWebClient.Models.JobSeeker
+﻿
+@using BusinessObject.Commons;
+@using BusinessObject.DTOs
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Http
 
 @{
-    Layout = "_LayoutJobSeeker"; ; // Không sử dụng layout
+    var httpContext = Context.Request.HttpContext;
+    var userJson = httpContext.Session.GetString(Enums.SESSION_KEY_JOB_SEEKER);
+    JobSeeker currentUser = null;
+    if (userJson != null)
+    {
+        currentUser = JsonConvert.DeserializeObject<JobSeeker>(userJson);
+    }
 }
 
 <!DOCTYPE html>
@@ -13,34 +22,63 @@
     <!-- Thêm các thư viện Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
-
 <body>
 
-<div class="container">
-    <h2>Job Seeker Information</h2>
-    
-    <form>
-        <div class="form-group">
-            <label for="FullName">Full Name:</label>
-                <input type="text" class="form-control" id="FullName" value="@JobSeeker.FullName" readonly>
-        </div>
-        <div class="form-group">
-            <label for="Email">Email:</label>
-                <input type="email" class="form-control" id="Email" value="@JobSeeker.Email" readonly>
-        </div>
-        <div class="form-group">
-            <label for="Password">Password:</label>
-                <input type="password" class="form-control" id="Password" value="@JobSeeker.Password" readonly>
-        </div>
-        <div class="form-group">
-            <label for="PhoneNumber">Phone Number:</label>
-                <input type="tel" class="form-control" id="PhoneNumber" value="@JobSeeker.PhoneNumber" readonly>
-        </div>
-    </form>
-</div>
+    <div class="container">
+        <h2>Job Seeker Information</h2>
 
-<!-- Thêm các thư viện Bootstrap JavaScript -->
+        <form>
+            <div class="form-group">
+                <label for="FullName">Full Name:</label>
+                <input type="text" class="form-control" id="FullName" placeholder="FName" readonly>
+            </div>
+            <div class="form-group">
+                <label for="Email">Email:</label>
+                <input type="email" class="form-control" id="Email" placeholder="email" readonly>
+            </div>
+            <div class="form-group">
+                <label for="Password">Password:</label>
+                <input type="password" class="form-control" id="Password" placeholder="password" readonly>
+            </div>
+            <div class="form-group">
+                <label for="PhoneNumber">Phone Number:</label>
+                <input type="tel" class="form-control" id="PhoneNumber" placeholder="phone" readonly>
+            </div>
+            <a class="btn btn-primary" href="/JobSeeker/EditProfile?id=@currentUser.JobSeekerId">Edit</a>  
+        </form>
+    </div>
+
+    @section Scripts{
+        <script src="../wwwroot/lib/jquery/dist/jquery.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Gửi yêu cầu API khi trang đã tải xong
+                $.ajax({
+                    url: `http://localhost:5090/odata/JobSeeker/${@currentUser.JobSeekerId}`, 
+                    method: "GET",
+                    success: function (data) {
+                        // Điền dữ liệu từ API vào các trường trong form
+                        $('#FullName').val(data.fullName);
+                        $('#Email').val(data.email);
+                        $('#Password').val(data.password);
+                        $('#PhoneNumber').val(data.phoneNumber);
+                    },
+                    error: function () {
+                        alert('Failed to fetch data from the API.');
+                    }
+                });
+            });
+
+            $('#editButton').click(function () {
+                // Chuyển hướng đến trang chỉnh sửa, bạn có thể thay đổi đường dẫn tùy thuộc vào cấu trúc của ứng dụng
+                window.location.href = `/EditProfile?id=${@currentUser.JobSeekerId}`;
+            });
+                    });
+        </script>
+
+                  
+}
 
 
-</body>
-</html>
+    </body>
+    </html>

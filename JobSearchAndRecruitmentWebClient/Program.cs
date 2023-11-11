@@ -10,7 +10,10 @@ namespace JobSearchAndRecruitmentWebClient
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            }));
             builder.Services.AddHttpClient<JobSeekerController>();
             builder.Services.AddHttpClient<EmployerController>();
             builder.Services.AddHttpContextAccessor();
@@ -25,7 +28,7 @@ namespace JobSearchAndRecruitmentWebClient
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

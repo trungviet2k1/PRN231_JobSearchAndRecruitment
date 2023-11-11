@@ -34,6 +34,10 @@ namespace JobSearchAndRecruitmentWebAPI
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            }));
 
             builder.Services.AddControllers().AddOData(options =>
             {
@@ -70,7 +74,7 @@ namespace JobSearchAndRecruitmentWebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseCors();
             app.UseODataBatching();
             app.UseRouting();
             app.UseHttpsRedirection();

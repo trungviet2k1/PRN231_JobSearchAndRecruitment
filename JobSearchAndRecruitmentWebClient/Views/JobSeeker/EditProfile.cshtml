@@ -1,0 +1,91 @@
+﻿@using BusinessObject.Commons;
+@using BusinessObject.DTOs
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Http
+
+@{
+    var httpContext = Context.Request.HttpContext;
+    var userJson = httpContext.Session.GetString(Enums.SESSION_KEY_JOB_SEEKER);
+    JobSeeker currentUser = null;
+    if (userJson != null)
+    {
+        currentUser = JsonConvert.DeserializeObject<JobSeeker>(userJson);
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit Profile</title>
+    <!-- Thêm các thư viện Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Edit Profile</h2>
+
+        <form id="editForm">
+            <div class="form-group">
+                <label for="EditFullName">Full Name:</label>
+                <input type="text" class="form-control" id="EditFullName" placeholder="Enter Full Name" value="@Model.FullName">
+            </div>
+            <div class="form-group">
+                <label for="EditPassword">Password:</label>
+                <input type="password" class="form-control" id="EditPassword" placeholder="Enter Password" value="@Model.Password">
+            </div>
+            <div class="form-group">
+                <label for="EditPhoneNumber">Phone Number:</label>
+                <input type="tel" class="form-control" id="EditPhoneNumber" placeholder="Enter Phone Number" value="@Model.PhoneNumber">
+            </div>
+            <button type="button" class="btn btn-success" id="saveButton">Save Changes</button>
+        </form>
+    </div>
+
+    @section Scripts{
+        <script src="../wwwroot/lib/jquery/dist/jquery.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Lấy dữ liệu từ API để điền vào form
+                $.ajax({
+                    url: `http://localhost:5090/odata/JobSeeker/${@currentUser.JobSeekerId}`,
+                    method: "GET",
+                    success: function (data) {
+                        $('#EditFullName').val(data.fullName);
+                        $('#EditPassword').val(data.password);
+                        $('#EditPhoneNumber').val(data.phoneNumber);
+                    },
+                    error: function () {
+                        alert('Failed to fetch data from the API.');
+                    }
+                });
+
+                // Xử lý sự kiện click của nút lưu
+                $('#saveButton').click(function () {
+                    // Lấy dữ liệu từ form
+                    var updatedData = {
+                        FullName: $('#EditFullName').val(),
+                        Password: $('#EditPassword').val(),
+                        PhoneNumber: $('#EditPhoneNumber').val()
+                    };
+
+                    // Gửi yêu cầu cập nhật thông tin đến API
+                    $.ajax({
+                        url: `http://localhost:5090/odata/JobSeeker/${@currentUser.JobSeekerId}`,
+                        method: "PUT",
+                        contentType: "application/json",
+                        data: JSON.stringify(updatedData),
+                        success: function () {
+                            alert('Profile updated successfully.');
+                        },
+                        error: function () {
+                            alert('Failed to update profile.');
+                        }
+                    });
+                });
+            });
+        </script>
+    }
+
+    </body>
+    </html>
