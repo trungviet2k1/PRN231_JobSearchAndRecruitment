@@ -25,7 +25,7 @@ namespace BusinessObject.Models
         public string? Location { get; set; }
 
         [Required]
-        public DateTime ApplicationDeadline { get; set; }
+        public DateTime? ApplicationDeadline { get; set; }
 
         [MaxLength(100)]
         public string? RequiredSkills { get; set; }

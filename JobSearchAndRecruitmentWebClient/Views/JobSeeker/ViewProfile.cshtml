@@ -1,9 +1,9 @@
-﻿@page
+﻿@* @page
 @using JobSearchAndRecruitmentWebClient.Models.JobSeeker
 
 @{
     Layout = "_LayoutJobSeeker"; ; // Không sử dụng layout
-}
+    }
 
 <!DOCTYPE html>
 <html>
@@ -16,31 +16,54 @@
 
 <body>
 
-<div class="container">
-    <h2>Job Seeker Information</h2>
-    
-    <form>
-        <div class="form-group">
-            <label for="FullName">Full Name:</label>
+    <div class="container">
+        <h2>Job Seeker Information</h2>
+
+        <form>
+            <div class="form-group">
+                <label for="FullName">Full Name:</label>
                 <input type="text" class="form-control" id="FullName" value="@JobSeeker.FullName" readonly>
-        </div>
-        <div class="form-group">
-            <label for="Email">Email:</label>
+            </div>
+            <div class="form-group">
+                <label for="Email">Email:</label>
                 <input type="email" class="form-control" id="Email" value="@JobSeeker.Email" readonly>
-        </div>
-        <div class="form-group">
-            <label for="Password">Password:</label>
+            </div>
+            <div class="form-group">
+                <label for="Password">Password:</label>
                 <input type="password" class="form-control" id="Password" value="@JobSeeker.Password" readonly>
-        </div>
-        <div class="form-group">
-            <label for="PhoneNumber">Phone Number:</label>
+            </div>
+            <div class="form-group">
+                <label for="PhoneNumber">Phone Number:</label>
                 <input type="tel" class="form-control" id="PhoneNumber" value="@JobSeeker.PhoneNumber" readonly>
-        </div>
-    </form>
-</div>
+            </div>
+        </form>
+    </div>
+    @section Scripts{
+        <script src="../wwwroot/lib/jquery/dist/jquery.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Gửi yêu cầu API khi trang đã tải xong
+                $.ajax({
+                    url: "http://localhost:5090/odata/JobSeeker/" + ${@currentUser.JobSeekerId},
+                    method: "GET",
+                    success: function (data) {
+                        // Điền dữ liệu từ API vào các trường trong form
+                        $('#FullName').val(data.fullName);
+                        $('#Email').val(data.email);
+                        $('#Password').val(data.password);
+                        $('#PhoneNumber').val(data.phoneNumber);
+                    },
+                    error: function () {
+                        alert('Failed to fetch data from the API.');
+                    }
+                });
+            })
+        </script>
+
+    }
 
 <!-- Thêm các thư viện Bootstrap JavaScript -->
 
 
 </body>
-</html>
+</html> *@

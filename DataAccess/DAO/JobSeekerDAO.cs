@@ -17,7 +17,7 @@ namespace DataAccess.DAO
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        public JobSeekerDTO GetJobSeekerByEmailAndPassWord(string email, string password) 
+        public JobSeekerDTO GetJobSeekerByEmailAndPassWord(string email, string password)
         {
             var findJobSeeker = dbContext.JobSeekers.FirstOrDefault(j => j.Email == email && j.Password == password);
             return mapper.Map<JobSeekerDTO>(findJobSeeker);
@@ -60,15 +60,11 @@ namespace DataAccess.DAO
             var existingJobSeeker = dbContext.JobSeekers.FirstOrDefault(j => j.JobSeekerId == jobSeekerDTO.JobSeekerId);
             if (existingJobSeeker != null)
             {
-             var upd =   mapper.Map(jobSeekerDTO, existingJobSeeker);
-                dbContext.JobSeekers.Update(upd); 
+                var upd = mapper.Map(jobSeekerDTO, existingJobSeeker);
+                dbContext.JobSeekers.Update(upd);
                 dbContext.SaveChanges();
             }
 
         }
-
-
-
-
     }
 }

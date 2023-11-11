@@ -56,9 +56,11 @@ namespace JobSearchAndRecruitmentWebAPI
 
             builder.Services.AddScoped<JobSeekerDAO>();
             builder.Services.AddScoped<EmployerDAO>();
+            builder.Services.AddScoped<JobDAO>();
 
             builder.Services.AddScoped<IJobSeekerRepository, JobSeekerRepository>();
             builder.Services.AddScoped<IEmployerRepository, EmployerRepository>();
+            builder.Services.AddScoped<IJobRepository, JobRepository>();
 
             builder.Services.AddCors();
 
