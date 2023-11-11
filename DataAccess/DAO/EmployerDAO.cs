@@ -60,7 +60,8 @@ namespace DataAccess.DAO
             var existingEmployee = dbContext.Employers.FirstOrDefault(j => j.EmployerId == employeeDTO.EmployerId);
             if (existingEmployee != null)
             {
-                mapper.Map(employeeDTO, existingEmployee);
+                var update = mapper.Map(employeeDTO, existingEmployee);
+                dbContext.Employers.Update(update);
                 dbContext.SaveChanges();
             }
         }

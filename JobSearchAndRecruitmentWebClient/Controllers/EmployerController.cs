@@ -24,6 +24,18 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
             return View();
         }
 
+        public IActionResult Manager()
+        {
+            var employerSession = HttpContext.Session.GetString(Enums.SESSION_KEY_EMPLOYER);
+
+            if (string.IsNullOrEmpty(employerSession))
+            {
+                return RedirectToAction("Login", "Employer");
+            }
+
+            return View();
+        }
+
         public IActionResult Login()
         {
             return View("Views/Employer/Login.cshtml");
@@ -54,7 +66,7 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
                 if (currentEmployer.IsEmployer == true)
                 {
                     HttpContext.Session.SetString(Enums.SESSION_KEY_EMPLOYER, System.Text.Json.JsonSerializer.Serialize(currentEmployer));
-                    return Redirect("/Employer/Home");
+                    return Redirect("/Employer/Manager");
                 }
             }
 
