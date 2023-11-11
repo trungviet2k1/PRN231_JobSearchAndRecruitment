@@ -12,6 +12,7 @@ namespace JobSearchAndRecruitmentWebClient
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddHttpClient<JobSeekerController>();
+            builder.Services.AddHttpClient<EmployerController>();
             builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddDistributedMemoryCache();

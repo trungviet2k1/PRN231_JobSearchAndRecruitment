@@ -5,43 +5,43 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.DAO
 {
-    public class EmployeeDAO
+    public class EmployerDAO
     {
         private readonly PRN231_ProjectDbContext dbContext;
         private readonly IMapper mapper;
 
-        public EmployeeDAO(PRN231_ProjectDbContext dbContext, IMapper mapper)
+        public EmployerDAO(PRN231_ProjectDbContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        public EmployeeDTO GetEmployeeByEmailAndPassWord(string email, string password)
+        public EmployerDTO GetEmployerByEmailAndPassWord(string email, string password)
         {
             var findEmployee = dbContext.Employers.FirstOrDefault(j => j.Email == email && j.Password == password);
-            return mapper.Map<EmployeeDTO>(findEmployee);
+            return mapper.Map<EmployerDTO>(findEmployee);
         }
 
-        public List<EmployeeDTO> GetAllEmployee()
+        public List<EmployerDTO> GetAllEmployer()
         {
             var listEmployee = dbContext.Employers.ToList();
-            return mapper.Map<List<EmployeeDTO>>(listEmployee);
+            return mapper.Map<List<EmployerDTO>>(listEmployee);
         }
 
-        public EmployeeDTO GetJobSeekerById(int employeeId)
+        public EmployerDTO GetEmployerById(int employeeId)
         {
             var employee = dbContext.Employers.FirstOrDefault(j => j.EmployerId == employeeId);
-            return mapper.Map<EmployeeDTO>(employee);
+            return mapper.Map<EmployerDTO>(employee);
         }
 
-        public EmployeeDTO GetEmployeeByEmail(string employeeEmail)
+        public EmployerDTO GetEmployerByEmail(string employeeEmail)
         {
             var employee = dbContext.Employers.FirstOrDefault(j => j.Email == employeeEmail);
-            return mapper.Map<EmployeeDTO>(employee);
+            return mapper.Map<EmployerDTO>(employee);
         }
 
-        public void CreateEmployee(EmployerRegisterDTO employeeDTO)
+        public void CreateEmployer(EmployerRegisterDTO employeeDTO)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace DataAccess.DAO
             }
         }
 
-        public void UpdateEmployee(EmployeeDTO employeeDTO)
+        public void UpdateEmployer(EmployerDTO employeeDTO)
         {
             var existingEmployee = dbContext.Employers.FirstOrDefault(j => j.EmployerId == employeeDTO.EmployerId);
             if (existingEmployee != null)

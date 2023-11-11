@@ -55,8 +55,10 @@ namespace JobSearchAndRecruitmentWebAPI
             opt.UseSqlServer(builder.Configuration.GetConnectionString("DbConnect")));
 
             builder.Services.AddScoped<JobSeekerDAO>();
+            builder.Services.AddScoped<EmployerDAO>();
 
             builder.Services.AddScoped<IJobSeekerRepository, JobSeekerRepository>();
+            builder.Services.AddScoped<IEmployerRepository, EmployerRepository>();
 
             builder.Services.AddCors();
 

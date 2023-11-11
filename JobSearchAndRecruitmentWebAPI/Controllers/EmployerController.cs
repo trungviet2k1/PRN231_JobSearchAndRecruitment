@@ -1,36 +1,36 @@
 ﻿using BusinessObject.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Service.IRepository;
-using Service.Repository;
 
 namespace JobSearchAndRecruitmentWebAPI.Controllers
 {
-    public class EmployeeController : ControllerBase
+    public class EmployerController : ODataController
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IEmployerRepository _employerRepository;
 
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        public EmployerController(IEmployerRepository employerRepository)
         {
-            _employeeRepository = employeeRepository;
+            _employerRepository = employerRepository;
         }
 
         [EnableQuery]
         public IActionResult Get()
         {
-            return Ok(_employeeRepository.GetAllEmployee());
+            return Ok(_employerRepository.GetAllEmployer());
         }
 
         [EnableQuery]
         public IActionResult Get(int key)
         {
-            return Ok(_employeeRepository.GetEmployeeById(key));
+            return Ok(_employerRepository.GetEmployerById(key));
         }
 
         [EnableQuery]
-        public IActionResult Put(int key, [FromBody] EmployeeDTO employeeDTO)
+        public IActionResult Put(int key, [FromBody] EmployerDTO employeeDTO)
         {
-            _employeeRepository.UpdateEmployee(employeeDTO);
+            _employerRepository.UpdateEmployer(employeeDTO);
             return Ok();
         }
 
@@ -39,7 +39,7 @@ namespace JobSearchAndRecruitmentWebAPI.Controllers
         [EnableQuery]
         public IActionResult Login([FromBody] EmployerLogin employerLogin)
         {
-            var _employerLogin = _employeeRepository.GetEmployeeByEmailAndPassword(employerLogin.Email, employerLogin.Password);
+            var _employerLogin = _employerRepository.GetEmployerByEmailAndPassword(employerLogin.Email, employerLogin.Password);
 
             if (_employerLogin != null)
             {
@@ -54,14 +54,14 @@ namespace JobSearchAndRecruitmentWebAPI.Controllers
         [Route("odata/Employee/Register")]
         [HttpPost]
         [EnableQuery]
-        public IActionResult Register([FromBody] EmployeeDTO register)
+        public IActionResult Register([FromBody] EmployerDTO register)
         {
             if (register == null) return BadRequest("Invalid registration data!");
 
-            var existingEmployee = _employeeRepository.GetEmployeeByEmail(register.Email);
-            if (existingEmployee != null) return BadRequest("Email already registered!");
+            var existingEmployer = _employerRepository.GetEmployerByEmail(register.Email);
+            if (existingEmployer != null) return BadRequest("Email already registered!");
 
-            EmployerRegisterDTO employee = new EmployerRegisterDTO
+            EmployerRegisterDTO employer = new EmployerRegisterDTO
             {
                 CompanyName = register.CompanyName,
                 FullName = register.FullName,
@@ -69,7 +69,7 @@ namespace JobSearchAndRecruitmentWebAPI.Controllers
                 Password = register.Password,
                 PhoneNumber = register.PhoneNumber
             };
-            _employeeRepository.CreateEmployee(employee);
+            _employerRepository.CreateEmployer(employer);
             return Ok("Registration successful.");
         }
     }

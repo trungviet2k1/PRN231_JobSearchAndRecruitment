@@ -4,7 +4,7 @@
 
     public class EmployerRegister : EmployerRegisterDTO { }
 
-    public class EmployeeDTO 
+    public class EmployerDTO 
     {
         public int EmployerId { get; set; }
 
