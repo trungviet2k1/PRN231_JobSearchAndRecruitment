@@ -16,66 +16,88 @@
     <span class="text-success">@ViewData["registerSuccess"]</span>
 </div>
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div class="rounded border p-4">
-                <form asp-action="Register" method="post">
-                    <div class="form-group mb-4">
-                        <div class="text-center">
-                            <strong>Create a free account!</strong>
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <div class="rounded border p-4">
+            <form asp-action="Register" method="post">
+                <div class="form-group mb-4">
+                    <div class="text-center">
+                        <strong>Create a free account!</strong>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group mb-4">
+                    <label asp-for="Email">
+                        <strong>Email</strong> <span class="text-danger">*</span>
+                    </label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="Password">
+                        <strong>Password</strong> <span class="text-danger">*</span>
+                    </label>
+                    <input asp-for="Password" class="form-control" type="password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="CompanyName">
+                        <strong>CompanyName</strong> <span class="text-danger">*</span>
+                    </label>
+                    <input asp-for="CompanyName" class="form-control" />
+                    <span asp-validation-for="CompanyName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="CompanyWebsite">
+                        <strong>Company Website</strong> <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                        <input asp-for="CompanyWebsite" class="form-control" type="url"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" onclick="openWebsite()">Open</button>
                         </div>
                     </div>
-                    <hr />
-                    <div class="form-group mb-4">
-                        <label asp-for="Email">
-                            <strong>Email</strong> <span class="text-danger">*</span>
-                        </label>
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
+                    <span asp-validation-for="CompanyWebsite" class="text-danger"></span>
+                </div>
 
-                    <div class="form-group mb-4">
-                        <label asp-for="Password">
-                            <strong>Password</strong> <span class="text-danger">*</span>
-                        </label>
-                        <input asp-for="Password" class="form-control" type="password" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
+                <div class="form-group mb-4">
+                    <label asp-for="FullName">
+                        <strong>FullName</strong> <span class="text-danger">*</span>
+                    </label>
+                    <input asp-for="FullName" class="form-control" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
 
-                    <div class="form-group mb-4">
-                        <label asp-for="CompanyName">
-                            <strong>CompanyName</strong> <span class="text-danger">*</span>
-                        </label>
-                        <input asp-for="CompanyName" class="form-control" />
-                        <span asp-validation-for="CompanyName" class="text-danger"></span>
-                    </div>
+                <div class="form-group col-lg-6 mb-4">
+                    <label asp-for="PhoneNumber">
+                        <strong>PhoneNumber</strong> <span class="text-danger">*</span>
+                    </label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
 
-                    <div class="form-group mb-4">
-                        <label asp-for="FullName">
-                            <strong>FullName</strong> <span class="text-danger">*</span>
-                        </label>
-                        <input asp-for="FullName" class="form-control" />
-                        <span asp-validation-for="FullName" class="text-danger"></span>
-                    </div>
+                <div class="form-group mb-4">
+                    <button class="btn btn-primary btn-login btn-block" type="submit">Register</button>
+                </div>
 
-                    <div class="form-group col-lg-6 mb-4">
-                        <label asp-for="PhoneNumber">
-                            <strong>PhoneNumber</strong> <span class="text-danger">*</span>
-                        </label>
-                        <input asp-for="PhoneNumber" class="form-control" />
-                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group mb-4">
-                        <button class="btn btn-primary btn-login btn-block" type="submit">Register</button>
-                    </div>
-
-                    <div class="form-group mb-4 text-center">
-                        <p class="text-sm font-semibold">I already have an account, <a href="@Url.Action("Login", "Employer")" class="btn-link">Sign In</a></p>
-                    </div>
-                </form>
-            </div>
+                <div class="form-group mb-4 text-center">
+                    <p class="text-sm font-semibold">I already have an account, <a href="@Url.Action("Login", "Employer")" class="btn-link">Sign In</a></p>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function openWebsite() {
+            var companyWebsite = document.getElementById("CompanyWebsite").value;
+            if (companyWebsite) {
+                window.open(companyWebsite, '_blank');
+            }
+        }
+    </script>
+}

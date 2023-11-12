@@ -15,80 +15,96 @@
 }
 
 <div class="container mt-3">
-    <h2>New Job Post</h2>
-
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="@Url.Action("Manager", "Employer")" type="button" class="btn btn-danger">
+            <i class="fas fa-arrow-left mx-2"></i>Back
+        </a>
+        <h2 class="text-center mx-auto">New Job Post</h2>
+    </div>
+    <hr class="mb-4" />
     <form id="newJobForm" asp-action="NewJobPost">
-        <div class="mb-3">
-            <label asp-for="Title" class="form-label">
-                <strong>Job Title</strong> <span class="text-danger">*</span>
-            </label>
-            <input asp-for="Title" type="text" class="form-control" id="title">
-            <span asp-validation-for="Title" class="text-danger"></span>
+        <div class="row mb-3">
+            <div class="col">
+                <label asp-for="Title" class="form-label">
+                    <strong>Job Title</strong> <span class="text-danger">*</span>
+                </label>
+                <input asp-for="Title" type="text" class="form-control" id="title">
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Description" class="form-label">
-                <strong>Job Description</strong> <span class="text-danger">*</span>
-            </label>
-            <textarea asp-for="Description" class="form-control" id="description" rows="4"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
+        <div class="row mb-3">
+            <div class="col">
+                <label asp-for="Description" class="form-label">
+                    <strong>Job Description</strong> <span class="text-danger">*</span>
+                </label>
+                <textarea asp-for="Description" class="form-control" id="description" rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label for="industry" class="form-label">
-                <strong>Industry</strong>
-            </label>
-            <input type="text" class="form-control" id="industry" name="industry" required>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="industry" class="form-label">
+                    <strong>Industry</strong>
+                </label>
+                <input type="text" class="form-control" id="industry" name="industry" required>
+            </div>
+
+            <div class="col">
+                <label for="location" class="form-label">
+                    <strong>Location</strong>
+                </label>
+                <input type="text" class="form-control" id="location" name="location">
+            </div>
+
+            <div class="col">
+                <label asp-for="ApplicationDeadline" class="form-label">
+                    <strong>Application Deadline</strong> <span class="text-danger">*</span>
+                </label>
+                <input asp-for="ApplicationDeadline" type="date" class="form-control" id="applicationDeadline" required>
+                <span asp-validation-for="Description" class="text-danger"></span>
+                <span id="validationAlert" class="text-danger"></span>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label for="location" class="form-label">
-                <strong>Location</strong>
-            </label>
-            <input type="text" class="form-control" id="location" name="location">
+        <div class="row mb-3">
+            <div class="col">
+                <label for="requiredSkills" class="form-label">
+                    <strong>Required Skills</strong>
+                </label>
+                <input type="text" class="form-control" id="requiredSkills" name="requiredSkills">
+            </div>
+
+            <div class="col">
+                <label for="requiredEducation" class="form-label">
+                    <strong>Required Education</strong>
+                </label>
+                <input type="text" class="form-control" id="requiredEducation" name="requiredEducation">
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="ApplicationDeadline" class="form-label">
-                <strong>Application Deadline</strong> <span class="text-danger">*</span>
-            </label>
-            <input asp-for="ApplicationDeadline" type="date" class="form-control" id="applicationDeadline" required>
-            <span asp-validation-for="Description" class="text-danger"></span>
-            <span id="validationAlert" class="text-danger"></span>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="salary" class="form-label">
+                    <strong>Salary</strong>
+                </label>
+                <input type="number" class="form-control" id="salary" name="salary">
+            </div>
+
+            <div class="col">
+                <label for="timeType" class="form-label">
+                    <strong>Time Type</strong>
+                </label>
+                <select class="form-select" id="timeType" name="timeType" required>
+                    @foreach (var value in Enum.GetValues(typeof(TimeType)))
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </select>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label for="requiredSkills" class="form-label">
-                <strong>Required Skills</strong>
-            </label>
-            <input type="text" class="form-control" id="requiredSkills" name="requiredSkills">
-        </div>
-
-        <div class="mb-3">
-            <label for="requiredEducation" class="form-label">
-                <strong>Required Education</strong>
-            </label>
-            <input type="text" class="form-control" id="requiredEducation" name="requiredEducation">
-        </div>
-
-        <div class="mb-3">
-            <label for="salary" class="form-label">
-                <strong>Salary</strong>
-            </label>
-            <input type="number" class="form-control" id="salary" name="salary">
-        </div>
-
-        <div class="mb-3">
-            <label for="timeType" class="form-label">
-                <strong>Time Type</strong>
-            </label>
-            <select class="form-select" id="timeType" name="timeType" required>
-                @foreach (var value in Enum.GetValues(typeof(TimeType)))
-                {
-                    <option value="@value">@value</option>
-                }
-            </select>
-        </div>
         <button type="button" class="btn btn-primary" id="AddJob">Submit</button>
     </form>
 </div>

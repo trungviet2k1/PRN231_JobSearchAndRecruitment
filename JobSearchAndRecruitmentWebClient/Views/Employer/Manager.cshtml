@@ -148,7 +148,7 @@
                             $("tbody").append($("<tr>"));
                             console.log(value);
                             appendElement = $("tbody tr").last();
-                            var editLink = '<a href="/Employer/EditJob/' + value["JobId"] + '"><i class="fas fa-edit"></i></a>';
+                            var editLink = '<a href="/Employer/EditJob/?jobId=' + value["JobId"] + '"><i class="fas fa-edit"></i></a>';
                             appendElement.append($("<td>").html(editLink));
                             appendElement.append($("<td>").html(value["Title"]));
                             appendElement.append($("<td>").html(value["Description"]));

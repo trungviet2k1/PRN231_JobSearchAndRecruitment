@@ -67,7 +67,8 @@ namespace JobSearchAndRecruitmentWebAPI.Controllers
                 FullName = register.FullName,
                 Email = register.Email,
                 Password = register.Password,
-                PhoneNumber = register.PhoneNumber
+                PhoneNumber = register.PhoneNumber,
+                CompanyWebsite = register.CompanyWebsite
             };
             _employerRepository.CreateEmployer(employer);
             return Ok("Registration successful.");

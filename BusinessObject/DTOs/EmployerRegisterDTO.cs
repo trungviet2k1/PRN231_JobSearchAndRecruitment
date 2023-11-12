@@ -14,6 +14,9 @@ namespace BusinessObject.DTOs
         [Required(ErrorMessage = ("Company Name is required!"))]
         public string CompanyName { get; set; } = null!;
 
+        [Required(ErrorMessage = ("Company Website is required!"))]
+        public string CompanyWebsite { get; set; } = null!;
+
         public bool IsEmployer { get; set; } = true;
     }
 }
