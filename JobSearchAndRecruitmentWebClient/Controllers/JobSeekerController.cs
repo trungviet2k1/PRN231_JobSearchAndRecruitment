@@ -94,10 +94,17 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
             return View();
         }
 
-        public IActionResult EditProfile()
+        /*public IActionResult EditProfile()
         {
             return EditProfile();
+        }*/
+
+        public IActionResult ViewJobSeekr()
+        {
+            return View();
         }
-            
+
+
+
     }
 }
