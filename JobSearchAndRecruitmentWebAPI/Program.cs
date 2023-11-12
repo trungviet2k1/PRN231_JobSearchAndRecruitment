@@ -35,6 +35,10 @@ namespace JobSearchAndRecruitmentWebAPI
             builder.Services.AddCors();
 
             builder.Services.AddControllers();
+            builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            }));
 
             builder.Services.AddControllers().AddOData(options =>
             {
@@ -80,6 +84,7 @@ namespace JobSearchAndRecruitmentWebAPI
                 .AllowAnyHeader();
             });
 
+            app.UseCors();
             app.UseODataBatching();
             app.UseRouting();
             app.UseHttpsRedirection();

@@ -1,0 +1,104 @@
+﻿@using BusinessObject.Commons;
+@using BusinessObject.DTOs
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Http
+
+@{
+    var httpContext = Context.Request.HttpContext;
+    var userJson = httpContext.Session.GetString(Enums.SESSION_KEY_JOB_SEEKER);
+    JobSeeker currentUser = null;
+    if (userJson != null)
+    {
+        currentUser = JsonConvert.DeserializeObject<JobSeeker>(userJson);
+    }
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="view" content="width=device-width" />
+    <title>Job Seeker</title>
+    <!-- Thêm các thư viện Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Job Seeker Information</h2>
+
+        <form>
+            <div class="form-group">
+                <label for="FullName">Full Name:</label>
+                <input type="text" class="form-control" id="FullName" placeholder="FName" readonly>
+            </div>
+            <div class="form-group">
+                <label for="Email">Email:</label>
+                <input type="email" class="form-control" id="Email" placeholder="email" readonly>
+            </div>
+        
+            <div class="form-group">
+                <label for="PhoneNumber">Phone Number:</label>
+                <input type="tel" class="form-control" id="PhoneNumber" placeholder="phone" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="Address">Address:</label>
+                <input type="text" class="form-control" id="Address" placeholder="address" readonly>
+            </div>
+            <div class="form-group">
+                <label for="ProfileDescription">ProfileDescription:</label>
+                <input type="text" class="form-control" id="ProfileDescription" placeholder="profileDescription" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="Education">Education:</label>
+                <input type="text" class="form-control" id="Education" placeholder="education" readonly>
+            </div>
+
+            
+            <div class="form-group">
+                <label for="WorkExperience">WorkExperience:</label>
+                <input type="text" class="form-control" id="WorkExperience" placeholder="workExperience" readonly>
+            </div>
+
+
+
+           @* <a class="btn btn-primary" href="/JobSeeker/EditProfile?id=@currentUser.JobSeekerId">Edit</a>*@
+        </form>
+    </div>
+
+    @section Scripts{
+        <a href="~/lib/jquery/dist/jquery.min.map"></a>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Gửi yêu cầu API khi trang đã tải xong
+                $.ajax({
+                    url: 'http://localhost:5090/odata/JobSeeker/' + @currentUser.JobSeekerId,
+                    method: "GET",
+                    success: function (data) {
+                        // Điền dữ liệu từ API vào các trường trong form
+                        $('#FullName').val(data.fullName);
+                        $('#Email').val(data.email);
+                        $('#PhoneNumber').val(data.phoneNumber);
+                        $('#Address').val(data.address);
+                        $('#Education').val(data.education);
+                        $('#WorkExperience').val(data.workExperience);
+
+
+                    },
+                    error: function () {
+                        alert('Failed to fetch data from the API.');
+                    }
+                });
+            });
+
+       
+        </script>
+
+
+    }
+
+
+    </body>
+    </html>

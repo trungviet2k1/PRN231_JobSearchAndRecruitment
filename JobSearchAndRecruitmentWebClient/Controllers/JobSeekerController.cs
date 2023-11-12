@@ -88,9 +88,23 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+
         public IActionResult ViewProfile()
         {
             return View();
         }
+
+        /*public IActionResult EditProfile()
+        {
+            return EditProfile();
+        }*/
+
+        public IActionResult ViewJobSeekr()
+        {
+            return View();
+        }
+
+
+
     }
 }
