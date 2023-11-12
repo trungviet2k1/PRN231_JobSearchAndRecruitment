@@ -44,13 +44,11 @@
     <table class="table table-sm table-striped table-bordered m-2">
         <thead>
             <tr>
-                <th>JobId</th>
                 <th>Title</th>
                 <th>Description</th>
                 <th>Industry</th>
                 <th>Job Posting Date</th>
                 <th>Time Type</th>
-                <th>Status</th>
                 <th>Actions</th> <!-- New column for actions -->
             </tr>
         </thead>
@@ -74,13 +72,11 @@
                         console.log('Data received:', result.value);
                         $.each(result.value, function (index, value) {
                             var appendElement = $("<tr>");
-                            appendElement.append($("<td>").html(value["JobId"]));
                             appendElement.append($("<td>").html(value["Title"]));
                             appendElement.append($("<td>").html(value["Description"]));
                             appendElement.append($("<td>").html(value["Industry"]));
                             appendElement.append($("<td>").html(value["CreateDate"]));
                             appendElement.append($("<td>").html(value["TimeType"]));
-                            appendElement.append($("<td>").html(value["Status"]));
 
                             // Add view details button
                             var viewDetailsButton = $("<button>")

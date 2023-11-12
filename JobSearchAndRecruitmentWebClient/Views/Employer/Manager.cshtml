@@ -111,17 +111,19 @@
 
             function updateJobStatusBasedOnDeadline(job) {
                 var currentDate = new Date();
-                var deadline = new Date(job["applicationDeadline"]);
+                var deadline = new Date(job["ApplicationDeadline"]);
 
-                if (deadline < currentDate) {
+                if (deadline <= currentDate && job["Status"] === true) {
                     $.ajax({
-                        url: "http://localhost:5090/odata/Job/" + job["JobId"],
+                        url: "http://localhost:5090/odata/Job/" + job["jobId"],
                         type: "PUT",
                         contentType: "application/json",
-                        data: JSON.stringify({ Status: false }),
+                        data: JSON.stringify({
+                            Status: false
+                        }),
                         success: function (result) {
                             if (result.success) {
-                                $("td[data-column='Status'][data-job-id='" + job["JobId"] + "']")
+                                $("td[data-column='Status'][data-job-id='" + job["jobId"] + "']")
                                     .removeClass("text-success")
                                     .addClass("text-danger")
                                     .html("Đã đóng");
@@ -144,18 +146,6 @@
                     contentType: "application/json",
                     success: function (result, status, xhr) {
                         console.log('Data received:', result.value);
-
-                        $.each(result.value, function (index,value) {
-                            $("tbody").append($("<tr>"));
-                            console.log(value);
-                            appendElement = $("tbody tr").last();
-                            appendElement.append($("<td>").html(value["JobId"]));
-                            appendElement.append($("<td>").html(value["Title"]));
-                            appendElement.append($("<td>").html(value["Description"]));
-                            appendElement.append($("<td>").html(value["Industry"]));
-                            appendElement.append($("<td>").html(value["CreateDate"]));
-                            appendElement.append($("<td>").html(value["TimeType"]));
-                            appendElement.append($("<td>").html(value["Status"]));
 
                         $.each(result.value, function (index, value) {
                             $("tbody").append($("<tr>"));
@@ -185,7 +175,6 @@
                             appendElement.append($("<td>").html(otherDropdown));
 
                             updateJobStatusBasedOnDeadline(value);
-
                         });
                     },
                     error: function (error) {
@@ -193,7 +182,6 @@
                     }
                 });
             }
-
             loadJobs();
         });
     </script>

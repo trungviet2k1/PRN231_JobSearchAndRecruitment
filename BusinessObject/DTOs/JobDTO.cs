@@ -26,12 +26,12 @@ namespace BusinessObject.DTOs
 
         public string? RequiredEducation { get; set; }
 
-        public decimal Salary { get; set; }
+        public decimal? Salary { get; set; }
 
-        public TimeType? TimeType { get; set; }
+        public TimeType TimeType { get; set; }
 
         public bool? Status { get; set; }
 
-        public int EmployerId { get; set; }
+        public int? EmployerId { get; set; }
     }
 }

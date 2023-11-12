@@ -66,7 +66,7 @@ namespace DataAccess.DAO
                 existingJobSeeker.Address = jobSeekerDTO.Address;
                 existingJobSeeker.ProfileDescription = jobSeekerDTO.ProfileDescription;
                 existingJobSeeker.Education = jobSeekerDTO.Education;  
-                existingJobSeeker.WorkExperience=jobSeekerDTO.WorkExperience;   
+                existingJobSeeker.WorkExperience=jobSeekerDTO.WorkExperience;
 
                 dbContext.JobSeekers.Update(existingJobSeeker);
                 dbContext.SaveChanges();
