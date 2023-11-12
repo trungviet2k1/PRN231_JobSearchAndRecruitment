@@ -93,10 +93,11 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
             return View("Views/JobSeeker/ViewProfile.cshtml");
         }
 
-        /*public IActionResult EditProfile()
+        public IActionResult EditProfile()
         {
-            return EditProfile();
-        }*/
+           
+            return View();
+        }
 
         public IActionResult ViewJobSeekr()
         {
