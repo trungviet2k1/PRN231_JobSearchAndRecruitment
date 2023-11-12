@@ -24,6 +24,8 @@ namespace BusinessObject.Models
         [MaxLength(200)]
         public string? Location { get; set; }
 
+        public DateTime? CreateDate { get; set; }
+
         [Required]
         public DateTime? ApplicationDeadline { get; set; }
 
@@ -37,6 +39,8 @@ namespace BusinessObject.Models
         public decimal Salary { get; set; }
 
         public TimeType TimeType { get; set; }
+
+        public bool Status { get; set; }
 
         public int EmployerId { get; set; }
 

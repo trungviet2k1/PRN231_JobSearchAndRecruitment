@@ -17,6 +17,8 @@ namespace BusinessObject.DTOs
 
         public string? Location { get; set; }
 
+        public DateTime? CreateDate { get; set; } = DateTime.Now;
+
         [Required(ErrorMessage = "Please enter the application deadline!")]
         public DateTime? ApplicationDeadline { get; set; }
 
@@ -27,6 +29,8 @@ namespace BusinessObject.DTOs
         public decimal Salary { get; set; }
 
         public TimeType? TimeType { get; set; }
+
+        public bool? Status { get; set; }
 
         public int EmployerId { get; set; }
     }

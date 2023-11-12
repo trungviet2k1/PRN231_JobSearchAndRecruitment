@@ -2,6 +2,7 @@
 using BusinessObject.DTOs;
 using BusinessObject.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 
 namespace DataAccess.DAO
 {
@@ -17,10 +18,10 @@ namespace DataAccess.DAO
             dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        public List<JobDTO> GetAllJob()
+        public List<Job> GetAllJob()
         {
             var listJobe = dbContext.Jobs.ToList();
-            return mapper.Map<List<JobDTO>>(listJobe);
+            return mapper.Map<List<Job>>(listJobe);
         }
 
         public JobDTO GetJobById(int jobId)

@@ -32,6 +32,7 @@ namespace JobSearchAndRecruitmentWebAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddCors();
 
             builder.Services.AddControllers();
 
@@ -62,8 +63,6 @@ namespace JobSearchAndRecruitmentWebAPI
             builder.Services.AddScoped<IEmployerRepository, EmployerRepository>();
             builder.Services.AddScoped<IJobRepository, JobRepository>();
 
-            builder.Services.AddCors();
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -72,6 +71,14 @@ namespace JobSearchAndRecruitmentWebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
 
             app.UseODataBatching();
             app.UseRouting();

@@ -23,10 +23,10 @@ namespace DataAccess.DAO
             return mapper.Map<JobSeekerDTO>(findJobSeeker);
         }
 
-        public List<JobSeekerDTO> GetAllJobSeekers()
+        public List<JobSeeker> GetAllJobSeekers()
         {
             var listJobSeeker = dbContext.JobSeekers.ToList();
-            return mapper.Map<List<JobSeekerDTO>>(listJobSeeker);
+            return mapper.Map<List<JobSeeker>>(listJobSeeker);
         }
 
         public JobSeekerDTO GetJobSeekerById(int jobSeekerId)

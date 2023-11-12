@@ -1,4 +1,5 @@
 ﻿using BusinessObject.DTOs;
+using BusinessObject.Models;
 using DataAccess.DAO;
 using Service.IRepository;
 
@@ -16,7 +17,7 @@ namespace Service.Repository
         public void CreateEmployer(EmployerRegisterDTO employerRegisterDTO) 
             => _employerDAO.CreateEmployer(employerRegisterDTO);
 
-        public List<EmployerDTO> GetAllEmployer() => _employerDAO.GetAllEmployer();
+        public List<Employer> GetAllEmployer() => _employerDAO.GetAllEmployer();
 
         public EmployerDTO GetEmployerByEmail(string email) => _employerDAO.GetEmployerByEmail(email);
 

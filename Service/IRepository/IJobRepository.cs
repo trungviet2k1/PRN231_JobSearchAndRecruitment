@@ -1,9 +1,11 @@
 ﻿using BusinessObject.DTOs;
+using BusinessObject.Models;
+
 namespace Service.IRepository
 {
     public interface IJobRepository
     {
-        List<JobDTO> GetAllJob();
+        List<Job> GetAllJob();
 
         JobDTO GetJobById(int jobId);
 

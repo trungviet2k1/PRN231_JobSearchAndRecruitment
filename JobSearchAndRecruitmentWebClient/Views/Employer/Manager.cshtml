@@ -1,9 +1,105 @@
-﻿@{
+﻿@using BusinessObject.Commons;
+@using Newtonsoft.Json;
+@{
     ViewData["Title"] = "Employers";
     Layout = "_LayoutE_Manager";
+
+    var httpContext = Context.Request.HttpContext;
+    var userJson = httpContext.Session.GetString(Enums.SESSION_KEY_EMPLOYER);
+    Employer currentUser = null;
+    if (userJson != null)
+    {
+        currentUser = JsonConvert.DeserializeObject<Employer>(userJson);
+    }
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row mt-3">
+    <div class="col-6">
+        <h2>Jobs</h2>
+    </div>
+    <div class="col-6 text-end">
+        <a href="#" class="btn btn-primary">Jobs Post</a>
+    </div>
 </div>
+
+<div class="row mt-3">
+    <div class="col-6">
+        <div class="input-group">
+            <span class="input-group-text">Filter:</span>
+        </div>
+    </div>
+    <div class="col-6 d-flex justify-content-end">
+        <div class="dropdown" style="padding-right: 10px;">
+            <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
+                Sorted by:
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Date submitted</a></li>
+                <li><a class="dropdown-item" href="#">Title</a></li>
+                <li><a class="dropdown-item" href="#">Jobs status</a></li>
+            </ul>
+        </div>
+        <div class="dropdown" style="padding-left: 10px;">
+            <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
+                Order by:
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Descending</a></li>
+                <li><a class="dropdown-item" href="#">Ascending</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <table class="table table-sm table-striped table-bordered m-2">
+        <thead>
+            <tr>
+                <th>JobId</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Industry</th>
+                <th>Job Posting Date</th>
+                <th>Time Type</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            loadJobs();
+
+            function loadJobs() {
+                $("table tbody").html("");
+                var employerId = '@currentUser.EmployerId';
+
+                $.ajax({
+                    url: "http://localhost:5090/odata/Job?$filter=EmployerId eq " + employerId,
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function (result, status, xhr) {
+                        console.log('Data received:', result.value);
+                        $.each(result, function (index, value) {
+                            $("tbody").append($("<tr>"));
+                            appendElement = $("tbody tr").last();
+                            appendElement.append($("<td>").html(value["jobId"]));
+                            appendElement.append($("<td>").html(value["title"]));
+                            appendElement.append($("<td>").html(value["description"]));
+                            appendElement.append($("<td>").html(value["industry"]));
+                            appendElement.append($("<td>").html(value["createDate"]));
+                            appendElement.append($("<td>").html(value["timeType"]));
+                            appendElement.append($("<td>").html(value["status"]));
+                        });
+                    },
+                    error: function (error) {
+                        console.log('Error loading jobs', error);
+                    }
+                });
+            }
+        });
+    </script>
+}

@@ -1,11 +1,12 @@
 ﻿using BusinessObject.DTOs;
+using BusinessObject.Models;
 
 namespace Service.IRepository
 {
     public interface IEmployerRepository
     {
         EmployerDTO GetEmployerByEmailAndPassword(string email, string password);
-        List<EmployerDTO> GetAllEmployer();
+        List<Employer> GetAllEmployer();
         EmployerDTO GetEmployerById(int employeeId);
         EmployerDTO GetEmployerByEmail(string email);
         void CreateEmployer(EmployerRegisterDTO employerRegisterDTO);
