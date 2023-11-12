@@ -1,4 +1,5 @@
-﻿@* @using BusinessObject.Commons;
+@using BusinessObject.Commons;
+﻿@using BusinessObject.Commons;
 @using BusinessObject.DTOs
 @using Newtonsoft.Json
 @using Microsoft.AspNetCore.Http
@@ -12,6 +13,7 @@
         currentUser = JsonConvert.DeserializeObject<JobSeeker>(userJson);
     }
 }
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,22 +30,29 @@
         <form id="editForm">
             <div class="form-group">
                 <label for="EditFullName">Full Name:</label>
-                <input type="text" class="form-control" id="EditFullName" placeholder="Enter Full Name" value="@Model.FullName">
+                <input type="text" class="form-control" id="EditFullName" placeholder="Full Name">
             </div>
             <div class="form-group">
                 <label for="EditPassword">Password:</label>
-                <input type="password" class="form-control" id="EditPassword" placeholder="Enter Password" value="@Model.Password">
+                <input type="password" class="form-control" id="EditPassword" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <label for="ReenterPassword">Re-enter Password:</label>
+                <input type="password" class="form-control" id="ReenterPassword" placeholder="Re-enter Password">
             </div>
             <div class="form-group">
                 <label for="EditPhoneNumber">Phone Number:</label>
-                <input type="tel" class="form-control" id="EditPhoneNumber" placeholder="Enter Phone Number" value="@Model.PhoneNumber">
+                <input type="tel" class="form-control" id="EditPhoneNumber" placeholder="Phone Number">
             </div>
             <button type="button" class="btn btn-success" id="saveButton">Save Changes</button>
         </form>
     </div>
 
     @section Scripts{
-        <script src="../wwwroot/lib/jquery/dist/jquery.min.js"></script>
+
+        <a href="~/lib/jquery/dist/jquery.min.map"></a>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
         <script>
             $(document).ready(function () {
                 // Lấy dữ liệu từ API để điền vào form
@@ -66,16 +75,25 @@
                     var updatedData = {
                         FullName: $('#EditFullName').val(),
                         Password: $('#EditPassword').val(),
+                        ReenterPassword: $('#ReenterPassword').val(),
                         PhoneNumber: $('#EditPhoneNumber').val()
+                        
                     };
+                    if (updatedData.Password != updatedData.ReenterPassword) {
+                        alert('Passwords do not match. Please re-enter.');
+                        return;
+                    }
+
 
                     // Gửi yêu cầu cập nhật thông tin đến API
                     $.ajax({
                         url: `http://localhost:5090/odata/JobSeeker/${@currentUser.JobSeekerId}`,
                         method: "PUT",
-                        contentType: "application/json",
+                        contentType: "application/json;odata.metadata=minimal;odata.streaming=true",
                         data: JSON.stringify(updatedData),
-                        success: function () {
+
+                        
+                        success: function (data) {
                             alert('Profile updated successfully.');
                         },
                         error: function () {
@@ -88,4 +106,3 @@
     }
 </body>
 </html>
- *@

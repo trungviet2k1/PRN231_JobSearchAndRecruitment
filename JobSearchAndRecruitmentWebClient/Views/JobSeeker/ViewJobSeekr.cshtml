@@ -69,13 +69,14 @@
                 // Gửi yêu cầu API khi trang đã tải xong
                 $.ajax({
                     url: 'http://localhost:5090/odata/JobSeeker/' + @currentUser.JobSeekerId,
-                    method: "GET",
+                    method: "Get",
                     success: function (data) {
                         // Điền dữ liệu từ API vào các trường trong form
                         $('#FullName').val(data.fullName);
                         $('#Email').val(data.email);
                         $('#PhoneNumber').val(data.phoneNumber);
                         $('#Address').val(data.address);
+                        $('#ProfileDescription').val(data.profileDescription);
                         $('#Education').val(data.education);
                         $('#WorkExperience').val(data.workExperience);
                     },
