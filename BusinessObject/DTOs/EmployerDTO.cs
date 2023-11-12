@@ -18,6 +18,8 @@
 
         public string PhoneNumber { get; set; } = null!;
 
+        public string CompanyWebsite { get; set; } = null!;
+
         public bool IsEmployer { get; set; } = true;
     }
 }

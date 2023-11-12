@@ -30,7 +30,8 @@ namespace BusinessObject.Models
         [MaxLength(15)]
         public string? PhoneNumber { get; set; }
 
-        [MaxLength(200)]
+        [MaxLength(255)]
+        [Url]
         public string? CompanyWebsite { get; set; }
 
         [MaxLength(200)]

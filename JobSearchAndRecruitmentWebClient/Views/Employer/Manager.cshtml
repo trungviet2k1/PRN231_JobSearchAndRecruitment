@@ -18,7 +18,7 @@
         <h2>Jobs</h2>
     </div>
     <div class="col-6 text-end">
-        <a href="#" class="btn btn-primary">Jobs Post</a>
+        <a href="@Url.Action("NewJobPost", "Employer")" class="btn btn-primary">Jobs Post</a>
     </div>
 </div>
 
@@ -33,35 +33,35 @@
             <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
                 Sorted by:
             </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Date submitted</a></li>
-                <li><a class="dropdown-item" href="#">Title</a></li>
-                <li><a class="dropdown-item" href="#">Jobs status</a></li>
+            <ul class="dropdown-menu" id="sortByDropdown">
+                <li><a class="dropdown-item" href="#" data-sort-by="submitted">Date submitted</a></li>
+                <li><a class="dropdown-item" href="#" data-sort-by="title">Title</a></li>
+                <li><a class="dropdown-item" href="#" data-sort-by="status">Jobs status</a></li>
             </ul>
         </div>
         <div class="dropdown" style="padding-left: 10px;">
             <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
                 Order by:
             </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Descending</a></li>
-                <li><a class="dropdown-item" href="#">Ascending</a></li>
+            <ul class="dropdown-menu" id="orderByDropdown">
+                <li><a class="dropdown-item" data-sort-order="desc">Descending</a></li>
+                <li><a class="dropdown-item" data-sort-order="asc">Ascending</a></li>
             </ul>
         </div>
     </div>
 </div>
 
 <div class="row mt-3">
-    <table class="table table-sm table-striped table-bordered m-2">
+    <table class="table">
         <thead>
             <tr>
-                <th>JobId</th>
+                <th></th>
                 <th>Title</th>
                 <th>Description</th>
-                <th>Industry</th>
                 <th>Job Posting Date</th>
-                <th>Time Type</th>
+                <th>Form of work</th>
                 <th>Status</th>
+                <th>Other</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -71,7 +71,68 @@
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
-            loadJobs();
+            $(document).on("click", '.dropdown-item[data-action="viewDetail"]', function () {
+                var jobId = $(this).data("job-id");
+                viewDetail(jobId);
+            });
+
+            $(document).on("click", '.dropdown-item[data-action="jobExtension"]', function () {
+                var jobId = $(this).data("job-id");
+                jobExtension(jobId);
+            });
+
+            $(document).on("click", '.dropdown-item[data-action="deleteJob"]', function () {
+                var jobId = $(this).data("job-id");
+                deleteJob(jobId);
+            });
+
+            function viewDetail(jobId) {
+                console.log("View Detail for Job ID: " + jobId);
+            }
+
+            function jobExtension(jobId) {
+                console.log("Job Extension for Job ID: " + jobId);
+            }
+
+            function deleteJob(jobId) {
+                $.ajax({
+                    url: "http://localhost:5090/odata/Job/" + jobId,
+                    type: "DELETE",
+                    contentType: "application/json",
+                    success: function (result) {
+                        console.log("Job with ID " + jobId + " has been deleted successfully.");
+                        loadJobs();
+                    },
+                    error: function (error) {
+                        console.log("Error deleting job with ID " + jobId + ": ", error);
+                    }
+                });
+            }
+
+            function updateJobStatusBasedOnDeadline(job) {
+                var currentDate = new Date();
+                var deadline = new Date(job["applicationDeadline"]);
+
+                if (deadline < currentDate) {
+                    $.ajax({
+                        url: "http://localhost:5090/odata/Job/" + job["JobId"],
+                        type: "PUT",
+                        contentType: "application/json",
+                        data: JSON.stringify({ Status: false }),
+                        success: function (result) {
+                            if (result.success) {
+                                $("td[data-column='Status'][data-job-id='" + job["JobId"] + "']")
+                                    .removeClass("text-success")
+                                    .addClass("text-danger")
+                                    .html("Đã đóng");
+                            }
+                        },
+                        error: function (error) {
+                            console.log('Error updating job status', error);
+                        }
+                    });
+                }
+            }
 
             function loadJobs() {
                 $("table tbody").html("");
@@ -83,6 +144,7 @@
                     contentType: "application/json",
                     success: function (result, status, xhr) {
                         console.log('Data received:', result.value);
+
                         $.each(result.value, function (index,value) {
                             $("tbody").append($("<tr>"));
                             console.log(value);
@@ -94,6 +156,36 @@
                             appendElement.append($("<td>").html(value["CreateDate"]));
                             appendElement.append($("<td>").html(value["TimeType"]));
                             appendElement.append($("<td>").html(value["Status"]));
+
+                        $.each(result.value, function (index, value) {
+                            $("tbody").append($("<tr>"));
+                            console.log(value);
+                            appendElement = $("tbody tr").last();
+                            var editLink = '<a href="/Employer/EditJob/?jobId=' + value["JobId"] + '"><i class="fas fa-edit"></i></a>';
+                            appendElement.append($("<td>").html(editLink));
+                            appendElement.append($("<td>").html(value["Title"]));
+                            appendElement.append($("<td>").html(value["Description"]));
+                            appendElement.append($("<td>").html(value["CreateDate"]));
+                            appendElement.append($("<td>").html(value["TimeType"]));
+
+                            var statusText = value["Status"] === true ? "Đang mở" : "Đã đóng";
+                            var statusClass = value["Status"] === true ? "text-success" : "text-danger";
+                            appendElement.append($("<td>").addClass(statusClass).html(statusText));
+
+                            var otherDropdown = '<div class="dropdown">' +
+                                '<button class="btn btn-success dropdown-toggle" type="button" id="otherDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>' +
+                                '<div class="dropdown-menu" aria-labelledby="otherDropdown">' +
+                                '<a class="dropdown-item" href="#" data-action="viewDetail" data-job-id="' + value["JobId"] + '">View Detail</a>' +
+                                '<a class="dropdown-item" href="#" data-action="jobExtension" data-job-id="' + value["JobId"] + '">Job Extension</a>' +
+                                '<div class="dropdown-divider"></div>' +
+                                '<a class="dropdown-item text-danger" href="#" data-action="deleteJob" data-job-id="' + value["JobId"] + '">Delete</a>' +
+                                '</div>' +
+                                '</div>';
+
+                            appendElement.append($("<td>").html(otherDropdown));
+
+                            updateJobStatusBasedOnDeadline(value);
+
                         });
                     },
                     error: function (error) {
@@ -101,6 +193,8 @@
                     }
                 });
             }
+
+            loadJobs();
         });
     </script>
 }

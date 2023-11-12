@@ -1,0 +1,183 @@
+﻿@using BusinessObject.Commons;
+@using Newtonsoft.Json;
+@model Job
+@{
+    ViewData["Title"] = "New Job Post";
+    Layout = "_LayoutE_Manager";
+
+    var httpContext = Context.Request.HttpContext;
+    var userJson = httpContext.Session.GetString(Enums.SESSION_KEY_EMPLOYER);
+    Employer currentUser = null;
+    if (userJson != null)
+    {
+        currentUser = JsonConvert.DeserializeObject<Employer>(userJson);
+    }
+}
+
+<div class="container mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="@Url.Action("Manager", "Employer")" type="button" class="btn btn-danger">
+            <i class="fas fa-arrow-left mx-2"></i>Back
+        </a>
+        <h2 class="text-center mx-auto">New Job Post</h2>
+    </div>
+    <hr class="mb-4" />
+    <form id="newJobForm" asp-action="NewJobPost">
+        <div class="row mb-3">
+            <div class="col">
+                <label asp-for="Title" class="form-label">
+                    <strong>Job Title</strong> <span class="text-danger">*</span>
+                </label>
+                <input asp-for="Title" type="text" class="form-control" id="title">
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label asp-for="Description" class="form-label">
+                    <strong>Job Description</strong> <span class="text-danger">*</span>
+                </label>
+                <textarea asp-for="Description" class="form-control" id="description" rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label for="industry" class="form-label">
+                    <strong>Industry</strong>
+                </label>
+                <input type="text" class="form-control" id="industry" name="industry" required>
+            </div>
+
+            <div class="col">
+                <label for="location" class="form-label">
+                    <strong>Location</strong>
+                </label>
+                <input type="text" class="form-control" id="location" name="location">
+            </div>
+
+            <div class="col">
+                <label asp-for="ApplicationDeadline" class="form-label">
+                    <strong>Application Deadline</strong> <span class="text-danger">*</span>
+                </label>
+                <input asp-for="ApplicationDeadline" type="date" class="form-control" id="applicationDeadline" required>
+                <span asp-validation-for="Description" class="text-danger"></span>
+                <span id="validationAlert" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label for="requiredSkills" class="form-label">
+                    <strong>Required Skills</strong>
+                </label>
+                <input type="text" class="form-control" id="requiredSkills" name="requiredSkills">
+            </div>
+
+            <div class="col">
+                <label for="requiredEducation" class="form-label">
+                    <strong>Required Education</strong>
+                </label>
+                <input type="text" class="form-control" id="requiredEducation" name="requiredEducation">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label for="salary" class="form-label">
+                    <strong>Salary</strong>
+                </label>
+                <input type="number" class="form-control" id="salary" name="salary">
+            </div>
+
+            <div class="col">
+                <label for="timeType" class="form-label">
+                    <strong>Time Type</strong>
+                </label>
+                <select class="form-select" id="timeType" name="timeType" required>
+                    @foreach (var value in Enum.GetValues(typeof(TimeType)))
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="AddJob">Submit</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#AddJob").click(function (e) {
+                e.preventDefault();
+
+                var currentDate = new Date();
+                var applicationDeadline = new Date($("#applicationDeadline").val());
+
+                if (applicationDeadline < currentDate) {
+                    $("#validationAlert").html("Application Deadline must be greater than the current date");
+                    $("#validationAlert").addClass("show");
+                    return;
+                }
+
+                var createDate = currentDate.toISOString();
+                var timeTypeString = $("#timeType").val();
+                var timeTypeEnum = {
+                    "FullTime": 0,
+                    "PartTime": 1,
+                    "Contract": 2,
+                    "Internship": 3,
+                    "Temporary": 4,
+                    "Remote": 5
+                };
+                $("#validationAlert").removeClass("show");
+                var timeTypeInt = timeTypeEnum[timeTypeString];
+
+                $.ajax({
+                    url: "http://localhost:5090/odata/Job",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        JobId: 0,
+                        Title: $("#title").val(),
+                        Description: $("#description").val(),
+                        Industry: $("#industry").val(),
+                        Location: $("#location").val(),
+                        CreateDate: createDate,
+                        ApplicationDeadline: $("#applicationDeadline").val(),
+                        RequiredSkills: $("#requiredSkills").val(),
+                        RequiredEducation: $("#requiredEducation").val(),
+                        Salary: $("#salary").val(),
+                        TimeType: timeTypeInt,
+                        Status: true,
+                        EmployerId: '@currentUser.EmployerId'
+                    }),
+                    success: function (result) {
+                        console.log('New job added successfully:', result);
+
+                        var alertHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                            'Add Successful' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                            '</div>';
+                        $("#notificationContainer").html(alertHtml);
+
+                        setTimeout(function () {
+                            window.location.href = "http://localhost:5063/Employer/Manager";
+                        }, 1000);
+                    },
+                    error: function (error) {
+                        console.log('Error adding new job:', error);
+                    }
+                });
+
+                $("#validationAlert").click(function () {
+                    $(this).removeClass("show");
+                });
+            });
+        });
+    </script>
+}

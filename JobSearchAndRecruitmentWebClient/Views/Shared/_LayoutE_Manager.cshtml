@@ -20,6 +20,15 @@
     <link href="~/fontawesome/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/JobSearchAndRecruitmentWebClient.styles.css" asp-append-version="true" />
+    <style>
+        .text-success {
+            color: #15ff00;
+        }
+
+        .text-danger {
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <div class="offcanvas offcanvas-start bg-dark text-white" id="demo" style="width: 250px;">
@@ -83,8 +92,8 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="userDropdown">
                                     <strong class="dropdown-header">@currentUser.CompanyName</strong>
-                                    <a class="dropdown-item mar" href="#">
-                                        <i class="fas fa-cogs" style="margin-right: 5px;"></i> Employer settings
+                                    <a class="dropdown-item mar" asp-area="" asp-controller="Employer" asp-action="Profile">
+                                        <i class="fas fa-user-circle" style="margin-right: 5px;"></i> Employer Profiles
                                     </a>
                                     <a class="dropdown-item" href="#">
                                         <i class="fas fa-pager" style="margin-right: 5px;"></i> Company page

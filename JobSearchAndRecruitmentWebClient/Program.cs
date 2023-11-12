@@ -16,6 +16,7 @@ namespace JobSearchAndRecruitmentWebClient
                 policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
             }));
             builder.Services.AddHttpClient<JobSeekerController>();
+            builder.Services.AddHttpClient<JobController>();
             builder.Services.AddHttpClient<EmployerController>();
             builder.Services.AddHttpContextAccessor();
 
