@@ -83,16 +83,17 @@
                     contentType: "application/json",
                     success: function (result, status, xhr) {
                         console.log('Data received:', result.value);
-                        $.each(result, function (index, value) {
+                        $.each(result.value, function (index,value) {
                             $("tbody").append($("<tr>"));
+                            console.log(value);
                             appendElement = $("tbody tr").last();
-                            appendElement.append($("<td>").html(value["jobId"]));
-                            appendElement.append($("<td>").html(value["title"]));
-                            appendElement.append($("<td>").html(value["description"]));
-                            appendElement.append($("<td>").html(value["industry"]));
-                            appendElement.append($("<td>").html(value["createDate"]));
-                            appendElement.append($("<td>").html(value["timeType"]));
-                            appendElement.append($("<td>").html(value["status"]));
+                            appendElement.append($("<td>").html(value["JobId"]));
+                            appendElement.append($("<td>").html(value["Title"]));
+                            appendElement.append($("<td>").html(value["Description"]));
+                            appendElement.append($("<td>").html(value["Industry"]));
+                            appendElement.append($("<td>").html(value["CreateDate"]));
+                            appendElement.append($("<td>").html(value["TimeType"]));
+                            appendElement.append($("<td>").html(value["Status"]));
                         });
                     },
                     error: function (error) {

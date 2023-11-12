@@ -76,13 +76,12 @@
                         Password: $('#EditPassword').val(),
                         ReenterPassword: $('#ReenterPassword').val(),
                         PhoneNumber: $('#EditPhoneNumber').val()
-                        
+      
                     };
                     if (updatedData.Password != updatedData.ReenterPassword) {
                         alert('Passwords do not match. Please re-enter.');
                         return;
                     }
-
 
                     // Gửi yêu cầu cập nhật thông tin đến API
                     $.ajax({

@@ -13,7 +13,7 @@ namespace Service.Repository
         {
             _jobSeekerDAO = jobSeekerDAO;
         }
-
+    
         public void CreateJobSeeker(JobSeekerRegisterDTO jobSeekerDTO) => _jobSeekerDAO.CreateJobSeeker(jobSeekerDTO);
 
         public List<JobSeeker> GetAllJobSeekers() => _jobSeekerDAO.GetAllJobSeekers();
@@ -26,5 +26,9 @@ namespace Service.Repository
             => _jobSeekerDAO.GetJobSeekerByEmailAndPassWord(email, password);
 
         public void UpdateJobSeeker(JobSeekerDTO jobSeekerDTO) => _jobSeekerDAO.UpdateJobSeeker(jobSeekerDTO);
+     //   public void CreateJobSeekr(JobSeekerDTO jobSeekerDTO) => _jobSeekerDAO.CreateJobSeekr(jobSeekerDTO);
+
+
+
     }
 }

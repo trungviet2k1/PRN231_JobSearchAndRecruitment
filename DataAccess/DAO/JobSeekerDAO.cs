@@ -71,7 +71,21 @@ namespace DataAccess.DAO
                 dbContext.JobSeekers.Update(existingJobSeeker);
                 dbContext.SaveChanges();
             }
-
+            
         }
+      /*  public void CreateJobSeekr(JobSeekerDTO jobSeekerDTO)
+        {
+            try
+            {
+                var jobSeeker = mapper.Map<JobSeeker>(jobSeekerDTO);
+                dbContext.JobSeekers.Add(jobSeeker);
+                dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.InnerException.Message);
+            }
+        }*/
+
     }
 }

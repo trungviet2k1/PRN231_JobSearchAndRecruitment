@@ -73,5 +73,31 @@ namespace JobSearchAndRecruitmentWebAPI.Controllers
             _jobSeekerRepository.CreateJobSeeker(jobSeeker);
             return Ok("Registration successful.");
         }
+
+
+        /*   [Route("odata/JobSeeker/AddJobSkeekr/{id}")]
+           [HttpPost]
+           [EnableQuery]
+           public IActionResult AddJobSkeekr(int id, [FromBody] JobSeekerDTO add)
+           {
+               if (add == null) return BadRequest("Invalid add data!");
+
+               var existingJobSeeker = _jobSeekerRepository.GetJobSeekerByEmail(add.Email);
+               if (existingJobSeeker != null) return BadRequest("Email already add!");
+
+               JobSeekerDTO jobSeeker = new JobSeekerDTO
+               {
+                   Id = id,  // Assuming Id is a property in JobSeekerDTO
+                   Address = add.Address,
+                   ProfileDescription = add.ProfileDescription,
+                   Education = add.Education,
+                   WorkExperience = add.WorkExperience,
+               };
+
+               _jobSeekerRepository.CreateJobSeekr(jobSeeker);
+               return Ok("Add successful.");
+           }
+   */
+
     }
 }

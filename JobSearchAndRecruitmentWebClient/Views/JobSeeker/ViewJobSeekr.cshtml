@@ -58,6 +58,8 @@
                 <input type="text" class="form-control" id="WorkExperience" placeholder="workExperience" readonly>
             </div>
             @* <a class="btn btn-primary" href="/JobSeeker/EditProfile?id=@currentUser.JobSeekerId">Edit</a>*@
+
+            <button type="button" class="btn btn-primary" id="editButton">Edit</button>
         </form>
     </div>
 
@@ -84,6 +86,11 @@
                         alert('Failed to fetch data from the API.');
                     }
                 });
+
+            })
+
+              $('#editButton').click(function () {
+                window.location.href = `/JobSeeker/EditJobSeekr?id=${@currentUser.JobSeekerId}`;
             });
         </script>
     }

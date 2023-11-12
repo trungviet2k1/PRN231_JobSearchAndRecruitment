@@ -103,5 +103,11 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
         {
             return View();
         }
+
+
+        public IActionResult EditJobSeekr()
+        {
+            return View();
+        }
     }
 }

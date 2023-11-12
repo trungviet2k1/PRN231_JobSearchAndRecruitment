@@ -11,5 +11,9 @@ namespace Service.IRepository
         JobSeekerDTO GetJobSeekerByEmail(string email);
         void CreateJobSeeker(JobSeekerRegisterDTO jobSeekerDTO);
         void UpdateJobSeeker(JobSeekerDTO jobSeekerDTO);
+
+    //    void CreateJobSeekr(JobSeekerDTO jobSeekerDTO);
+
+    
     }
 }
