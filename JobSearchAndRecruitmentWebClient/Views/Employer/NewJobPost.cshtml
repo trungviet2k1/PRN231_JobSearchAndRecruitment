@@ -1,6 +1,6 @@
 ﻿@using BusinessObject.Commons;
 @using Newtonsoft.Json;
-
+@model Job
 @{
     ViewData["Title"] = "New Job Post";
     Layout = "_LayoutE_Manager";
@@ -17,49 +17,71 @@
 <div class="container mt-3">
     <h2>New Job Post</h2>
 
-    <form id="newJobForm">
+    <form id="newJobForm" asp-action="NewJobPost">
         <div class="mb-3">
-            <label for="title" class="form-label">Job Title</label>
-            <input type="text" class="form-control" id="title" name="title" required>
+            <label asp-for="Title" class="form-label">
+                <strong>Job Title</strong> <span class="text-danger">*</span>
+            </label>
+            <input asp-for="Title" type="text" class="form-control" id="title">
+            <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label for="description" class="form-label">Job Description</label>
-            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+            <label asp-for="Description" class="form-label">
+                <strong>Job Description</strong> <span class="text-danger">*</span>
+            </label>
+            <textarea asp-for="Description" class="form-control" id="description" rows="4"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label for="industry" class="form-label">Industry</label>
+            <label for="industry" class="form-label">
+                <strong>Industry</strong>
+            </label>
             <input type="text" class="form-control" id="industry" name="industry" required>
         </div>
 
         <div class="mb-3">
-            <label for="location" class="form-label">Location</label>
+            <label for="location" class="form-label">
+                <strong>Location</strong>
+            </label>
             <input type="text" class="form-control" id="location" name="location">
         </div>
 
         <div class="mb-3">
-            <label for="applicationDeadline" class="form-label">Application Deadline</label>
-            <input type="date" class="form-control" id="applicationDeadline" name="applicationDeadline" required>
+            <label asp-for="ApplicationDeadline" class="form-label">
+                <strong>Application Deadline</strong> <span class="text-danger">*</span>
+            </label>
+            <input asp-for="ApplicationDeadline" type="date" class="form-control" id="applicationDeadline" required>
+            <span asp-validation-for="Description" class="text-danger"></span>
+            <span id="validationAlert" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label for="requiredSkills" class="form-label">Required Skills</label>
+            <label for="requiredSkills" class="form-label">
+                <strong>Required Skills</strong>
+            </label>
             <input type="text" class="form-control" id="requiredSkills" name="requiredSkills">
         </div>
 
         <div class="mb-3">
-            <label for="requiredEducation" class="form-label">Required Education</label>
+            <label for="requiredEducation" class="form-label">
+                <strong>Required Education</strong>
+            </label>
             <input type="text" class="form-control" id="requiredEducation" name="requiredEducation">
         </div>
 
         <div class="mb-3">
-            <label for="salary" class="form-label">Salary</label>
-            <input type="text" class="form-control" id="salary" name="salary">
+            <label for="salary" class="form-label">
+                <strong>Salary</strong>
+            </label>
+            <input type="number" class="form-control" id="salary" name="salary">
         </div>
 
         <div class="mb-3">
-            <label for="timeType" class="form-label">Time Type</label>
+            <label for="timeType" class="form-label">
+                <strong>Time Type</strong>
+            </label>
             <select class="form-select" id="timeType" name="timeType" required>
                 @foreach (var value in Enum.GetValues(typeof(TimeType)))
                 {
@@ -67,12 +89,6 @@
                 }
             </select>
         </div>
-
-        <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="status" name="status" checked>
-            <label class="form-check-label" for="status">Open Position</label>
-        </div>
-
         <button type="button" class="btn btn-primary" id="AddJob">Submit</button>
     </form>
 </div>
@@ -84,8 +100,15 @@
                 e.preventDefault();
 
                 var currentDate = new Date();
-                var createDate = currentDate.toISOString();
+                var applicationDeadline = new Date($("#applicationDeadline").val());
 
+                if (applicationDeadline < currentDate) {
+                    $("#validationAlert").html("Application Deadline must be greater than the current date");
+                    $("#validationAlert").addClass("show");
+                    return;
+                }
+
+                var createDate = currentDate.toISOString();
                 var timeTypeString = $("#timeType").val();
                 var timeTypeEnum = {
                     "FullTime": 0,
@@ -95,6 +118,7 @@
                     "Temporary": 4,
                     "Remote": 5
                 };
+                $("#validationAlert").removeClass("show");
                 var timeTypeInt = timeTypeEnum[timeTypeString];
 
                 $.ajax({
@@ -113,7 +137,7 @@
                         RequiredEducation: $("#requiredEducation").val(),
                         Salary: $("#salary").val(),
                         TimeType: timeTypeInt,
-                        Status: $("#status").prop("checked"),
+                        Status: true,
                         EmployerId: '@currentUser.EmployerId'
                     }),
                     success: function (result) {
@@ -132,6 +156,10 @@
                     error: function (error) {
                         console.log('Error adding new job:', error);
                     }
+                });
+
+                $("#validationAlert").click(function () {
+                    $(this).removeClass("show");
                 });
             });
         });

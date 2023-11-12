@@ -41,6 +41,11 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
             return View();
         }
 
+        public ActionResult EditJob()
+        {
+            return View("Views/Employer/EditJob.cshtml");
+        }
+
         public IActionResult Login()
         {
             return View("Views/Employer/Login.cshtml");
