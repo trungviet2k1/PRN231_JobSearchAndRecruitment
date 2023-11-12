@@ -88,10 +88,9 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
         public IActionResult ViewProfile()
         {
-            return View();
+            return View("Views/JobSeeker/ViewProfile.cshtml");
         }
 
         /*public IActionResult EditProfile()
@@ -103,8 +102,5 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
         {
             return View();
         }
-
-
-
     }
 }
