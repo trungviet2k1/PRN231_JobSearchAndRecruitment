@@ -1,0 +1,139 @@
+﻿@using BusinessObject.Commons;
+@using Newtonsoft.Json;
+
+@{
+    ViewData["Title"] = "New Job Post";
+    Layout = "_LayoutE_Manager";
+
+    var httpContext = Context.Request.HttpContext;
+    var userJson = httpContext.Session.GetString(Enums.SESSION_KEY_EMPLOYER);
+    Employer currentUser = null;
+    if (userJson != null)
+    {
+        currentUser = JsonConvert.DeserializeObject<Employer>(userJson);
+    }
+}
+
+<div class="container mt-3">
+    <h2>New Job Post</h2>
+
+    <form id="newJobForm">
+        <div class="mb-3">
+            <label for="title" class="form-label">Job Title</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Job Description</label>
+            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="industry" class="form-label">Industry</label>
+            <input type="text" class="form-control" id="industry" name="industry" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" class="form-control" id="location" name="location">
+        </div>
+
+        <div class="mb-3">
+            <label for="applicationDeadline" class="form-label">Application Deadline</label>
+            <input type="date" class="form-control" id="applicationDeadline" name="applicationDeadline" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="requiredSkills" class="form-label">Required Skills</label>
+            <input type="text" class="form-control" id="requiredSkills" name="requiredSkills">
+        </div>
+
+        <div class="mb-3">
+            <label for="requiredEducation" class="form-label">Required Education</label>
+            <input type="text" class="form-control" id="requiredEducation" name="requiredEducation">
+        </div>
+
+        <div class="mb-3">
+            <label for="salary" class="form-label">Salary</label>
+            <input type="text" class="form-control" id="salary" name="salary">
+        </div>
+
+        <div class="mb-3">
+            <label for="timeType" class="form-label">Time Type</label>
+            <select class="form-select" id="timeType" name="timeType" required>
+                @foreach (var value in Enum.GetValues(typeof(TimeType)))
+                {
+                    <option value="@value">@value</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="status" name="status" checked>
+            <label class="form-check-label" for="status">Open Position</label>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="AddJob">Submit</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#AddJob").click(function (e) {
+                e.preventDefault();
+
+                var currentDate = new Date();
+                var createDate = currentDate.toISOString();
+
+                var timeTypeString = $("#timeType").val();
+                var timeTypeEnum = {
+                    "FullTime": 0,
+                    "PartTime": 1,
+                    "Contract": 2,
+                    "Internship": 3,
+                    "Temporary": 4,
+                    "Remote": 5
+                };
+                var timeTypeInt = timeTypeEnum[timeTypeString];
+
+                $.ajax({
+                    url: "http://localhost:5090/odata/Job",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        JobId: 0,
+                        Title: $("#title").val(),
+                        Description: $("#description").val(),
+                        Industry: $("#industry").val(),
+                        Location: $("#location").val(),
+                        CreateDate: createDate,
+                        ApplicationDeadline: $("#applicationDeadline").val(),
+                        RequiredSkills: $("#requiredSkills").val(),
+                        RequiredEducation: $("#requiredEducation").val(),
+                        Salary: $("#salary").val(),
+                        TimeType: timeTypeInt,
+                        Status: $("#status").prop("checked"),
+                        EmployerId: '@currentUser.EmployerId'
+                    }),
+                    success: function (result) {
+                        console.log('New job added successfully:', result);
+
+                        var alertHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                            'Add Successful' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                            '</div>';
+                        $("#notificationContainer").html(alertHtml);
+
+                        setTimeout(function () {
+                            window.location.href = "http://localhost:5063/Employer/Manager";
+                        }, 1000);
+                    },
+                    error: function (error) {
+                        console.log('Error adding new job:', error);
+                    }
+                });
+            });
+        });
+    </script>
+}
