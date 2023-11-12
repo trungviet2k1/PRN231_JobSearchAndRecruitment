@@ -1,8 +1,8 @@
-﻿@using BusinessObject.Commons;
-@using Newtonsoft.Json;
+﻿@using BusinessObject.Commons
+@using Newtonsoft.Json
 @model Job
 @{
-    ViewData["Title"] = "Edit Job Post";
+    ViewData["Title"] = "View Job Postings";
     Layout = "_LayoutE_Manager";
 
     var httpContext = Context.Request.HttpContext;
@@ -12,4 +12,164 @@
     {
         currentUser = JsonConvert.DeserializeObject<Employer>(userJson);
     }
+}
+
+<div class="container mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="@Url.Action("Manager", "Employer")" type="button" class="btn btn-danger">
+            <i class="fas fa-arrow-left mx-2"></i>Back
+        </a>
+        <h2 class="text-center mx-auto">View Job Postings</h2>
+    </div>
+    <hr class="mb-4" />
+
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col">
+                <h3>Content</h3>
+            </div>
+        </div>
+
+        <div class="row mb-3" style="display:none">
+            <div class="col-md-6">
+                <label for="JobId" class="form-label">
+                    <strong>ID</strong>
+                </label>
+                <input type="text" class="form-control" id="jobId" name="formOfWork" readonly>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="title" class="form-label">
+                    <strong>Title</strong>
+                </label>
+                <input type="text" class="form-control" id="title" name="title" readonly>
+            </div>
+
+            <div class="col-md-6">
+                <label for="industry" class="form-label">
+                    <strong>Industry</strong>
+                </label>
+                <input type="text" class="form-control" id="industry" name="industry" readonly>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="timeType" class="form-label">
+                    <strong>Form Of Work</strong>
+                </label>
+                <input type="text" class="form-control" id="timeType" name="formOfWork" readonly>
+            </div>
+
+            <div class="col-md-6">
+                <label for="salary" class="form-label">
+                    <strong>Salary</strong>
+                </label>
+                <input type="number" class="form-control" id="salary" name="salary" readonly>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="location" class="form-label">
+                    <strong>Work location</strong>
+                </label>
+                <input type="text" class="form-control" id="location" name="workLocation" readonly>
+            </div>
+
+            <div class="col-md-6">
+                <label for="requiredSkills" class="form-label">
+                    <strong>Required Skills</strong>
+                </label>
+                <input type="text" class="form-control" id="requiredSkills" name="requiredSkills" readonly>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="requiredEducation" class="form-label">
+                    <strong>Required Education</strong>
+                </label>
+                <input type="text" class="form-control" id="requiredEducation" name="requiredEducation" readonly>
+            </div>
+
+            <div class="col-md-6">
+                <label for="applicationDeadline" class="form-label">
+                    <strong>Application Deadline</strong>
+                </label>
+                <input type="datetime-local" class="form-control" id="applicationDeadline" readonly>
+            </div>
+        </div>
+    </div>
+
+    <hr class="mb-4" />
+
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col">
+                <h3>Job Description</h3>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label for="Description" class="form-label">
+                    <strong>Description</strong>
+                </label>
+                <textarea class="form-control" id="description" rows="4" readonly></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            GetJobById();
+
+            function GetJobById() {
+                var params = new URLSearchParams(window.location.search);
+                var jobId = params.get("jobId");
+
+                $.ajax({
+                    url: "http://localhost:5090/odata/Job/" + jobId,
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function (result, status, xhr) {
+                        $("#jobId").val(result.jobId);
+                        $("#title").val(result.title);
+                        $("#description").val(result.description);
+                        $("#industry").val(result.industry);
+                        $("#location").val(result.location);
+                        $("#applicationDeadline").val(result.applicationDeadline);
+                        $("#requiredSkills").val(result.requiredSkills);
+                        $("#requiredEducation").val(result.requiredEducation);
+                        $("#salary").val(result.salary);
+                        var timeTypeDropdown = $("#timeType");
+                        timeTypeDropdown.empty();
+
+                        var timeTypeEnum = {
+                            "FullTime": 0,
+                            "PartTime": 1,
+                            "Contract": 2,
+                            "Internship": 3,
+                            "Temporary": 4,
+                            "Remote": 5
+                        };
+
+                        $.each(timeTypeEnum, function (key, value) {
+                            timeTypeDropdown.append($("<option>").text(key).val(value));
+                        });
+
+                        timeTypeDropdown.val(result.timeType);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('Error loading job data', xhr);
+                    }
+                });
+            }
+        });
+    </script>
 }
