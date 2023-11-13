@@ -20,11 +20,11 @@ namespace JobSearchAndRecruitmentWebAPI
                 builder.EntitySet<JobSeeker>("JobSeeker");
                 builder.EntitySet<Employer>("Employer");
                 builder.EntitySet<Job>("Job");
-                builder.EntitySet<JobApplicant>("JobApplicant").EntityType.HasKey(j => j.JobApplicationId);
-                builder.EntitySet<SavedJobs>("SavedJobs").EntityType.HasKey(s => s.SavedJobId);
-                builder.EntitySet<Notifications>("Notifications").EntityType.HasKey(n => n.NotificationId);
-                builder.EntitySet<Resume>("Resume").EntityType.HasKey(re => re.ResumeId);
-                builder.EntitySet<RatingsAndReviews>("RatingsAndReviews").EntityType.HasKey(ra => ra.RatingId);
+                builder.EntitySet<JobApplicant>("JobApplicant");
+                builder.EntitySet<SavedJobs>("SavedJobs");
+                builder.EntitySet<Notifications>("Notifications");
+                builder.EntitySet<Resume>("Resume");
+                builder.EntitySet<RatingsAndReviews>("RatingsAndReviews");
 
                 return builder.GetEdmModel();
             }
@@ -62,10 +62,12 @@ namespace JobSearchAndRecruitmentWebAPI
             builder.Services.AddScoped<JobSeekerDAO>();
             builder.Services.AddScoped<EmployerDAO>();
             builder.Services.AddScoped<JobDAO>();
+            builder.Services.AddScoped<SavedJobsDAO>();
 
             builder.Services.AddScoped<IJobSeekerRepository, JobSeekerRepository>();
             builder.Services.AddScoped<IEmployerRepository, EmployerRepository>();
             builder.Services.AddScoped<IJobRepository, JobRepository>();
+            builder.Services.AddScoped<ISavedJobsRepository, SavedJobsRepository>();
 
             var app = builder.Build();
 
