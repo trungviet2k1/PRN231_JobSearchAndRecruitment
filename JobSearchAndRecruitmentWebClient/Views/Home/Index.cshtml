@@ -18,6 +18,8 @@
                 <th>Job Posting Date</th>
                 <th>Time Type</th>
                 <th>Actions</th> <!-- New column for actions -->
+                <th>Upload JobSeeker </th> <!-- New column for file upload -->
+                <th>Save Job</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -65,6 +67,26 @@
                                     alert("Apply success for JobId: " + value["JobId"]);
                                 });
                             appendElement.append($("<td>").append(applyButton));
+
+                            // Add file upload button
+                            var uploadPDFButton = $("<input>")
+                                .attr("type", "file")
+                                .attr("accept", ".pdf")
+                                .on("change", function () {
+                                    // Add logic to handle file upload
+                                    alert("PDF uploaded for JobId: " + value["JobId"]);
+                                });
+                            appendElement.append($("<td>").append(uploadPDFButton));
+
+                            // Add Save Job button
+                            var saveJobButton = $("<button>")
+                                .text("Save Job")
+                                .addClass("btn btn-warning btn-sm mx-1")
+                                .on("click", function () {
+                                    // Add logic to handle Save Job
+                                    alert("Job saved for JobId: " + value["JobId"]);
+                                });
+                            appendElement.append($("<td>").append(saveJobButton));
 
                             $("tbody").append(appendElement);
                         });
