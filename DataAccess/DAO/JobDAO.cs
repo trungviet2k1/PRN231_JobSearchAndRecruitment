@@ -54,6 +54,7 @@ namespace DataAccess.DAO
         public void UpdateJob(JobDTO jobDTO)
         {
             var existingJob = dbContext.Jobs.FirstOrDefault(j => j.JobId == jobDTO.JobId);
+
             if (existingJob != null)
             {
                 var update = mapper.Map(jobDTO, existingJob);

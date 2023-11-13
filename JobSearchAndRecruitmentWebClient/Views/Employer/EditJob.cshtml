@@ -7,7 +7,7 @@
 
     var httpContext = Context.Request.HttpContext;
     var userJson = httpContext.Session.GetString(Enums.SESSION_KEY_EMPLOYER);
-    Employer currentUser = null;
+    Employer currentUser = null!;
     if (userJson != null)
     {
         currentUser = JsonConvert.DeserializeObject<Employer>(userJson);
@@ -18,6 +18,14 @@
     <h2 class="text-center mb-3">Edit Job Post</h2>
     <hr class="mb-4" />
     <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col">
+                <label asp-for="JobId" class="form-label"><strong>ID</strong></label>
+                <input asp-for="JobId" type="text" class="form-control" id="jobId" readonly />
+                <span asp-validation-for="JobId" class="text-danger"></span>
+            </div>
+        </div>
+
         <div class="row mb-3">
             <div class="col">
                 <label asp-for="Title" class="form-label">
@@ -57,8 +65,8 @@
                 <label asp-for="ApplicationDeadline" class="form-label">
                     <strong>Application Deadline</strong> <span class="text-danger">*</span>
                 </label>
-                <input asp-for="ApplicationDeadline" type="date" class="form-control" id="applicationDeadline" required>
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <input asp-for="ApplicationDeadline" type="datetime-local" class="form-control" id="applicationDeadline" required>
+                <span asp-validation-for="ApplicationDeadline" class="text-danger"></span>
                 <span id="validationAlert" class="text-danger"></span>
             </div>
         </div>
@@ -100,7 +108,7 @@
             </div>
         </div>
 
-        <button type="button" class="btn btn-primary" id="AddJob">Submit</button>
+        <button type="button" class="btn btn-primary" id="EditJob">Submit</button>
         <a href="@Url.Action("Manager", "Employer")" type="button" class="btn btn-danger">Cancel</a>
     </div>
 </div>
@@ -119,16 +127,32 @@
                     type: "GET",
                     contentType: "application/json",
                     success: function (result, status, xhr) {
-                        jobId = result.JobId;
-                        $("#title").val(result.Title);
-                        $("#description").val(result.Description);
-                        $("#industry").val(result.Industry);
-                        $("#location").val(result.Location);
-                        $("#applicationDeadline").val(result.ApplicationDeadline);
-                        $("#requiredSkills").val(result.RequiredSkills);
-                        $("#requiredEducation").val(result.RequiredEducation);
-                        $("#salary").val(result.Salary);
-                        $("#timeType").val(result.TimeType);
+                        $("#jobId").val(result.jobId);
+                        $("#title").val(result.title);
+                        $("#description").val(result.description);
+                        $("#industry").val(result.industry);
+                        $("#location").val(result.location);
+                        $("#applicationDeadline").val(result.applicationDeadline);
+                        $("#requiredSkills").val(result.requiredSkills);
+                        $("#requiredEducation").val(result.requiredEducation);
+                        $("#salary").val(result.salary);
+                        var timeTypeDropdown = $("#timeType");
+                        timeTypeDropdown.empty();
+
+                        var timeTypeEnum = {
+                            "FullTime": 0,
+                            "PartTime": 1,
+                            "Contract": 2,
+                            "Internship": 3,
+                            "Temporary": 4,
+                            "Remote": 5
+                        };
+
+                        $.each(timeTypeEnum, function (key, value) {
+                            timeTypeDropdown.append($("<option>").text(key).val(value));
+                        });
+
+                        timeTypeDropdown.val(result.timeType);
                     },
                     error: function (xhr, status, error) {
                         console.log('Error loading job data', xhr);
@@ -136,32 +160,62 @@
                 });
             }
 
-        @*function updateJob(jobId) {
-            var updatedJob = {
-            Title: $("#title").val(),
-            Description: $("#description").val(),
-            Industry: $("#industry").val(),
-            Location: $("#location").val(),
-            ApplicationDeadline: $("#applicationDeadline").val(),
-            RequiredSkills: $("#requiredSkills").val(),
-            RequiredEducation: $("#requiredEducation").val(),
-            Salary: $("#salary").val(),
-            TimeType: $("#timeType").val()
-            };
+            $("#EditJob").click(function (e) {
+                e.preventDefault();
+                var jobId = $("#jobId").val();
 
-            $.ajax({
-            url: "http://localhost:5090/odata/Job/" + jobId,
-            type: "PUT",
-            contentType: "application/json",
-            data: JSON.stringify(updatedJob),
-            success: function (result) {
-            console.log("Job with ID " + jobId + " has been updated successfully.");
-            },
-            error: function (error) {
-            console.log("Error updating job with ID " + jobId + ": ", error);
-            }
-            });
-            }*@
+                var currentDate = new Date();
+                var applicationDeadline = new Date($("#applicationDeadline").val());
+
+                if (applicationDeadline < currentDate) {
+                    $("#validationAlert").html("Application Deadline must be greater than the current date");
+                    $("#validationAlert").addClass("show");
+                    return;
+                }
+                $("#validationAlert").removeClass("show");
+
+                var timeTypeString = $("#timeType").val();
+                var timeTypeEnum = {
+                    "FullTime": 0,
+                    "PartTime": 1,
+                    "Contract": 2,
+                    "Internship": 3,
+                    "Temporary": 4,
+                    "Remote": 5
+                };
+
+                var timeTypeInt = timeTypeEnum[timeTypeString];
+
+                $.ajax({
+                    url: "http://localhost:5090/odata/Job/" + jobId,
+                    type: "PUT",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        JobId: jobId,
+                        Title: $("#title").val(),
+                        Description: $("#description").val(),
+                        Industry: $("#industry").val(),
+                        Location: $("#location").val(),
+                        ApplicationDeadline: $("#applicationDeadline").val(),
+                        RequiredSkills: $("#requiredSkills").val(),
+                        RequiredEducation: $("#requiredEducation").val(),
+                        Salary: $("#salary").val(),
+                        TimeType: timeTypeInt,
+                        Status: true,
+                        EmployerId: '@currentUser.EmployerId'
+                    }),
+                    success: function (result) {
+                        console.log("Job with ID " + jobId + " has been updated successfully.");
+
+                        setTimeout(function () {
+                            window.location.href = "http://localhost:5063/Employer/Manager";
+                        }, 1000);
+                    },
+                    error: function (error) {
+                        console.log("Error updating job with ID " + jobId + ": ", error);
+                    }
                 });
+            });
+        });
     </script>
 }

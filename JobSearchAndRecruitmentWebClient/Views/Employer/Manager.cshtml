@@ -87,7 +87,7 @@
             });
 
             function viewDetail(jobId) {
-                console.log("View Detail for Job ID: " + jobId);
+                window.location.href = '/Employer/JobDetail/?jobId=' + jobId;
             }
 
             function jobExtension(jobId) {
@@ -111,14 +111,16 @@
 
             function updateJobStatusBasedOnDeadline(job) {
                 var currentDate = new Date();
-                var deadline = new Date(job["applicationDeadline"]);
+                var deadline = new Date(job["ApplicationDeadline"]);
 
-                if (deadline < currentDate) {
+                if (deadline <= currentDate && job["Status"] === true) {
                     $.ajax({
                         url: "http://localhost:5090/odata/Job/" + job["JobId"],
                         type: "PUT",
                         contentType: "application/json",
-                        data: JSON.stringify({ Status: false }),
+                        data: JSON.stringify({
+                            Status: false
+                        }),
                         success: function (result) {
                             if (result.success) {
                                 $("td[data-column='Status'][data-job-id='" + job["JobId"] + "']")
@@ -142,12 +144,15 @@
                     url: "http://localhost:5090/odata/Job?$filter=EmployerId eq " + employerId,
                     type: "GET",
                     contentType: "application/json",
+
                     success: function (result, status, xhr) {
                         console.log('Data received:', result.value);
 
+
+                    success: function (result) {
+
                         $.each(result.value, function (index, value) {
                             $("tbody").append($("<tr>"));
-                            console.log(value);
                             appendElement = $("tbody tr").last();
                             var editLink = '<a href="/Employer/EditJob/?jobId=' + value["JobId"] + '"><i class="fas fa-edit"></i></a>';
                             appendElement.append($("<td>").html(editLink));
