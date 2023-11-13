@@ -8,12 +8,10 @@ namespace Service.Repository
     public class JobRepository : IJobRepository
     {
         private readonly JobDAO _jobDAO;
-        private readonly PRN231_ProjectDbContext _dbContext;
 
-        public JobRepository(JobDAO jobDAO, PRN231_ProjectDbContext dbContext)
+        public JobRepository(JobDAO jobDAO)
         {
             _jobDAO = jobDAO;
-            _dbContext = dbContext;
         }
 
         public void CreateJob(JobDTO jobDTO) => _jobDAO.CreateJob(jobDTO);

@@ -144,13 +144,7 @@
                     url: "http://localhost:5090/odata/Job?$filter=EmployerId eq " + employerId,
                     type: "GET",
                     contentType: "application/json",
-
-                    success: function (result, status, xhr) {
-                        console.log('Data received:', result.value);
-
-
                     success: function (result) {
-
                         $.each(result.value, function (index, value) {
                             $("tbody").append($("<tr>"));
                             appendElement = $("tbody tr").last();

@@ -1,10 +1,8 @@
 ﻿using BusinessObject.DTOs;
-using DataAccess.DAO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Service.IRepository;
-using Service.Repository;
 
 namespace JobSearchAndRecruitmentWebAPI.Controllers
 {
@@ -49,7 +47,5 @@ namespace JobSearchAndRecruitmentWebAPI.Controllers
             _jobRepository.DeleteJob(key);
             return Ok();
         }
-
-
     }
 }

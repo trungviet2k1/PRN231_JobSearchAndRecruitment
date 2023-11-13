@@ -13,6 +13,7 @@ namespace BusinessObject.Mapping
             CreateMap<Employer, EmployerDTO>().ReverseMap();
             CreateMap<Employer, EmployerRegisterDTO>().ReverseMap();
             CreateMap<Job, JobDTO>().ReverseMap();
+            CreateMap<SavedJobs, SavedJobsDTO>().ReverseMap();
         }
     }
 }
