@@ -21,6 +21,7 @@
     <title>Edit Profile</title>
     <!-- Thêm các thư viện Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 </head>
 <body>
 
@@ -33,9 +34,12 @@
             </div>
             <div class="form-group">
                 <label for="EditEmail">Email:</label>
-                <input type="email" class="form-control" id="EditEmail" placeholder="Email">
+                <input type="email" class="form-control" id="EditEmail" placeholder="Email" readonly>
             </div>
-
+            <div class="form-group">
+                <label for="EditPassword">Password:</label>
+                <input type="password" class="form-control" id="EditPassword" placeholder="Password" readonly>
+            </div> 
             <div class="form-group">
                 <label for="EditPhoneNumber">Phone Number:</label>
                 <input type="tel" class="form-control" id="EditPhoneNumber" placeholder="Phone Number">
@@ -47,8 +51,9 @@
             </div>
             <div class="form-group">
                 <label for="EditProfileDescription">Profile Description:</label>
-                <input type="text" class="form-control" id="EditProfileDescription" placeholder="Profile Description">
+                <textarea class="form-control" id="EditProfileDescription" placeholder="Profile Description"></textarea>
             </div>
+
 
             <div class="form-group">
                 <label for="EditEducation">Education:</label>
@@ -76,6 +81,7 @@
                     success: function (data) {
                         // Điền dữ liệu từ API vào các trường trong form
                         $('#EditFullName').val(data.fullName);
+                        $('#EditPassword').val(data.password);
                         $('#EditEmail').val(data.email);
                         $('#EditPhoneNumber').val(data.phoneNumber);
                         $('#EditAddress').val(data.address);

@@ -145,18 +145,6 @@
                     success: function (result, status, xhr) {
                         console.log('Data received:', result.value);
 
-                        $.each(result.value, function (index,value) {
-                            $("tbody").append($("<tr>"));
-                            console.log(value);
-                            appendElement = $("tbody tr").last();
-                            appendElement.append($("<td>").html(value["JobId"]));
-                            appendElement.append($("<td>").html(value["Title"]));
-                            appendElement.append($("<td>").html(value["Description"]));
-                            appendElement.append($("<td>").html(value["Industry"]));
-                            appendElement.append($("<td>").html(value["CreateDate"]));
-                            appendElement.append($("<td>").html(value["TimeType"]));
-                            appendElement.append($("<td>").html(value["Status"]));
-
                         $.each(result.value, function (index, value) {
                             $("tbody").append($("<tr>"));
                             console.log(value);
@@ -185,7 +173,6 @@
                             appendElement.append($("<td>").html(otherDropdown));
 
                             updateJobStatusBasedOnDeadline(value);
-
                         });
                     },
                     error: function (error) {
@@ -193,7 +180,6 @@
                     }
                 });
             }
-
             loadJobs();
         });
     </script>
