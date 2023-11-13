@@ -95,7 +95,7 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
 
         public IActionResult EditProfile()
         {
-           
+
             return View();
         }
 
