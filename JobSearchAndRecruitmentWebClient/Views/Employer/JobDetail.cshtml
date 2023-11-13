@@ -129,6 +129,25 @@
         $(document).ready(function () {
             GetJobById();
 
+            function getTimeTypeString(timeType) {
+                switch (timeType) {
+                    case 0:
+                        return "FullTime";
+                    case 1:
+                        return "PartTime";
+                    case 2:
+                        return "Contract";
+                    case 3:
+                        return "Internship";
+                    case 4:
+                        return "Temporary";
+                    case 5:
+                        return "Remote";
+                    default:
+                        return "";
+                }
+            }
+
             function GetJobById() {
                 var params = new URLSearchParams(window.location.search);
                 var jobId = params.get("jobId");
@@ -137,7 +156,7 @@
                     url: "http://localhost:5090/odata/Job/" + jobId,
                     type: "GET",
                     contentType: "application/json",
-                    success: function (result, status, xhr) {
+                    success: function (result) {
                         $("#jobId").val(result.jobId);
                         $("#title").val(result.title);
                         $("#description").val(result.description);
@@ -147,23 +166,9 @@
                         $("#requiredSkills").val(result.requiredSkills);
                         $("#requiredEducation").val(result.requiredEducation);
                         $("#salary").val(result.salary);
-                        var timeTypeDropdown = $("#timeType");
-                        timeTypeDropdown.empty();
 
-                        var timeTypeEnum = {
-                            "FullTime": 0,
-                            "PartTime": 1,
-                            "Contract": 2,
-                            "Internship": 3,
-                            "Temporary": 4,
-                            "Remote": 5
-                        };
-
-                        $.each(timeTypeEnum, function (key, value) {
-                            timeTypeDropdown.append($("<option>").text(key).val(value));
-                        });
-
-                        timeTypeDropdown.val(result.timeType);
+                        var timeTypeInput = $("#timeType");
+                        timeTypeInput.val(getTimeTypeString(result.timeType));
                     },
                     error: function (xhr, status, error) {
                         console.log('Error loading job data', xhr);

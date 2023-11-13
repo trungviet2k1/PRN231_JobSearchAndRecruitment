@@ -7,7 +7,7 @@
 
     var httpContext = Context.Request.HttpContext;
     var userJson = httpContext.Session.GetString(Enums.SESSION_KEY_EMPLOYER);
-    Employer currentUser = null;
+    Employer currentUser = null!;
     if (userJson != null)
     {
         currentUser = JsonConvert.DeserializeObject<Employer>(userJson);

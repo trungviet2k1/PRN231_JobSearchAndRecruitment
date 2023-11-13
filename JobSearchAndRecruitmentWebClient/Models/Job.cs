@@ -14,6 +14,8 @@ namespace JobSearchAndRecruitmentWebClient.Models
 
         public string? Location { get; set; }
 
+        public DateTime? CreateDate { get; set; } = DateTime.UtcNow;
+
         public DateTime? ApplicationDeadline { get; set; }
 
         public string? RequiredSkills { get; set; }

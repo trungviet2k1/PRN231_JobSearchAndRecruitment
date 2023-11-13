@@ -17,7 +17,7 @@ namespace BusinessObject.DTOs
 
         public string? Location { get; set; }
 
-        public DateTime? CreateDate { get; set; } = DateTime.Now;
+        public DateTime? CreateDate { get; set; } = DateTime.UtcNow;
 
         [Required(ErrorMessage = "Please enter the application deadline!")]
         public DateTime? ApplicationDeadline { get; set; }

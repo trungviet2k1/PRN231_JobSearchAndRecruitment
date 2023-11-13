@@ -24,7 +24,7 @@ namespace BusinessObject.Models
         [MaxLength(200)]
         public string? Location { get; set; }
 
-        public DateTime? CreateDate { get; set; } = DateTime.Now;
+        public DateTime? CreateDate { get; set; } = DateTime.UtcNow;
 
         [Required]
         public DateTime? ApplicationDeadline { get; set; }
