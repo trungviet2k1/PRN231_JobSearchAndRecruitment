@@ -99,13 +99,13 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
             return View();
         }
 
-        public IActionResult ViewJobSeekr()
+        public IActionResult ViewJobSeeker()
         {
             return View();
         }
 
 
-        public IActionResult EditJobSeekr()
+        public IActionResult EditJobSeeker()
         {
             return View();
         }

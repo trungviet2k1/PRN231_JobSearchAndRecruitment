@@ -1,12 +1,12 @@
-
-
-﻿@using BusinessObject.Commons;
-
+@using BusinessObject.Commons;
 @using BusinessObject.DTOs
 @using Newtonsoft.Json
 @using Microsoft.AspNetCore.Http
 
 @{
+    ViewData["Title"] = "Edit Profile";
+    Layout = "_Layout";
+
     var httpContext = Context.Request.HttpContext;
     var userJson = httpContext.Session.GetString(Enums.SESSION_KEY_JOB_SEEKER);
     JobSeeker currentUser = null;
@@ -15,99 +15,81 @@
         currentUser = JsonConvert.DeserializeObject<JobSeeker>(userJson);
     }
 }
-
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Edit Profile</title>
-    <!-- Thêm các thư viện Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-</head>
-<body>
-
-    <div class="container">
-        <h2>Edit Profile</h2>
-
-        <form id="editForm">
-            <div class="form-group">
-                <label for="EditFullName">Full Name:</label>
-                <input type="text" class="form-control" id="EditFullName" placeholder="Full Name">
-            </div>
-          
-            <div class="form-group">
-                <label for="EditPassword">Password:</label>
-                <input type="password" class="form-control" id="EditPassword" placeholder="Password" >
-            </div>
-            <div class="form-group">
-                <label for="ReenterPassword">ReenterPassword:</label>
-                <input type="password" class="form-control" id="ReenterPassword" placeholder="ReenterPassword">
-            </div>
-
-            <div class="form-group">
-                <label for="EditPhoneNumber">Phone Number:</label>
-                <input type="tel" class="form-control" id="EditPhoneNumber" placeholder="Phone Number">
-            </div>
-            <button type="button" class="btn btn-success" id="saveButton">Save Changes</button>
-        </form>
+<h2>Edit Profile</h2>
+<form id="editForm">
+    <div class="form-group mb-3">
+        <label for="EditFullName">Full Name:</label>
+        <input type="text" class="form-control" id="EditFullName" placeholder="Full Name">
     </div>
 
-    @section Scripts{
+    <div class="form-group mb-3">
+        <label for="EditPassword">Password:</label>
+        <input type="password" class="form-control" id="EditPassword" placeholder="Password">
+    </div>
 
-        <a href="~/lib/jquery/dist/jquery.min.map"></a>
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <div class="form-group mb-3">
+        <label for="ReenterPassword">ReenterPassword:</label>
+        <input type="password" class="form-control" id="ReenterPassword" placeholder="ReenterPassword">
+    </div>
 
-        <script>
-            $(document).ready(function () {
-                // Lấy dữ liệu từ API để điền vào form
+    <div class="form-group mb-3">
+        <label for="EditPhoneNumber">Phone Number:</label>
+        <input type="tel" class="form-control" id="EditPhoneNumber" placeholder="Phone Number">
+    </div>
+
+    <button type="button" class="btn btn-success mb-3" id="saveButton">Save Changes</button>
+</form>
+
+@section Scripts{
+    <a href="~/lib/jquery/dist/jquery.min.map"></a>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Lấy dữ liệu từ API để điền vào form
+            $.ajax({
+                url: `http://localhost:5090/odata/JobSeeker/${@currentUser.JobSeekerId}`,
+                method: "GET",
+                success: function (data) {
+                    $('#EditFullName').val(data.fullName);
+                    $('#EditPassword').val(data.password);
+                    $('#EditPhoneNumber').val(data.phoneNumber);
+                },
+                error: function () {
+                    alert('Failed to fetch data from the API.');
+                }
+            });
+
+            // Xử lý sự kiện click của nút lưu
+            $('#saveButton').click(function () {
+                // Lấy dữ liệu từ form
+                var updatedData = {
+                    FullName: $('#EditFullName').val(),
+                    Password: $('#EditPassword').val(),
+                    ReenterPassword: $('#ReenterPassword').val(),
+                    PhoneNumber: $('#EditPhoneNumber').val()
+
+                };
+                if (updatedData.Password != updatedData.ReenterPassword) {
+                    alert('Passwords do not match. Please re-enter.');
+                    return;
+                }
+
+                // Gửi yêu cầu cập nhật thông tin đến API
                 $.ajax({
                     url: `http://localhost:5090/odata/JobSeeker/${@currentUser.JobSeekerId}`,
-                    method: "GET",
+                    method: "PUT",
+                    contentType: "application/json;odata.metadata=minimal;odata.streaming=true",
+                    data: JSON.stringify(updatedData),
+
+
                     success: function (data) {
-                        $('#EditFullName').val(data.fullName);
-                        $('#EditPassword').val(data.password);
-                        $('#EditPhoneNumber').val(data.phoneNumber);
+                        alert('Profile updated successfully.');
                     },
                     error: function () {
-                        alert('Failed to fetch data from the API.');
+                        alert('Failed to update profile.');
                     }
-                });
-
-
-                // Xử lý sự kiện click của nút lưu
-                $('#saveButton').click(function () {
-                    // Lấy dữ liệu từ form
-                    var updatedData = {
-                        FullName: $('#EditFullName').val(),
-                        Password: $('#EditPassword').val(),
-                        ReenterPassword: $('#ReenterPassword').val(),
-                        PhoneNumber: $('#EditPhoneNumber').val()
-      
-                    };
-                    if (updatedData.Password != updatedData.ReenterPassword) {
-                        alert('Passwords do not match. Please re-enter.');
-                        return;
-                    }
-
-                    // Gửi yêu cầu cập nhật thông tin đến API
-                    $.ajax({
-                        url: `http://localhost:5090/odata/JobSeeker/${@currentUser.JobSeekerId}`,
-                        method: "PUT",
-                        contentType: "application/json;odata.metadata=minimal;odata.streaming=true",
-                        data: JSON.stringify(updatedData),
-
-                        
-                        success: function (data) {
-                            alert('Profile updated successfully.');
-                        },
-                        error: function () {
-                            alert('Failed to update profile.');
-                        }
-                    });
                 });
             });
-        </script>
-    }
-
-</body>
-</html>
+        });
+    </script>
+}
