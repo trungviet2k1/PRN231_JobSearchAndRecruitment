@@ -20,6 +20,7 @@
     <link href="~/fontawesome/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/JobSearchAndRecruitmentWebClient.styles.css" asp-append-version="true" />
+    <script src="~/js/chart.js"></script>
     <style>
         .text-success {
             color: #15ff00;
@@ -46,9 +47,9 @@
             <button type="button" class="btn btn-outline-light w-100 mb-2 d-flex align-items-start">
                 <i class="fas fa-calendar-alt me-2"></i> Interview
             </button>
-            <button type="button" class="btn btn-outline-light w-100 mb-2 d-flex align-items-start">
+            <a class="btn btn-outline-light w-100 mb-2 d-flex align-items-start" asp-area="" asp-controller="Employer" asp-action="Statistical">
                 <i class="fas fa-chart-bar me-2"></i> Analysis
-            </button>
+            </a>
         </div>
     </div>
 

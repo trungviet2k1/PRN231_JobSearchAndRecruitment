@@ -36,18 +36,48 @@ namespace JobSearchAndRecruitmentWebClient.Controllers
             return View();
         }
 
+        public IActionResult Statistical()
+        {
+            var employerSession = HttpContext.Session.GetString(Enums.SESSION_KEY_EMPLOYER);
+
+            if (string.IsNullOrEmpty(employerSession))
+            {
+                return RedirectToAction("Login", "Employer");
+            }
+
+            return View();
+        }
+
         public ActionResult NewJobPost()
         {
+            var employerSession = HttpContext.Session.GetString(Enums.SESSION_KEY_EMPLOYER);
+
+            if (string.IsNullOrEmpty(employerSession))
+            {
+                return RedirectToAction("Login", "Employer");
+            }
             return View();
         }
 
         public ActionResult JobDetail()
         {
+            var employerSession = HttpContext.Session.GetString(Enums.SESSION_KEY_EMPLOYER);
+
+            if (string.IsNullOrEmpty(employerSession))
+            {
+                return RedirectToAction("Login", "Employer");
+            }
             return View();
         }
 
         public ActionResult Profile()
         {
+            var employerSession = HttpContext.Session.GetString(Enums.SESSION_KEY_EMPLOYER);
+
+            if (string.IsNullOrEmpty(employerSession))
+            {
+                return RedirectToAction("Login", "Employer");
+            }
             return View();
         }
 

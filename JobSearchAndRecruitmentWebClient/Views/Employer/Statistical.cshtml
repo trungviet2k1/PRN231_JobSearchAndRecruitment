@@ -1,0 +1,167 @@
+﻿@using BusinessObject.Commons
+@using Newtonsoft.Json
+
+@{
+    ViewData["Title"] = "Statistics";
+    Layout = "_LayoutE_Manager";
+
+    var httpContext = Context.Request.HttpContext;
+    var userJson = httpContext.Session.GetString(Enums.SESSION_KEY_EMPLOYER);
+    Employer currentUser = null;
+    if (userJson != null)
+    {
+        currentUser = JsonConvert.DeserializeObject<Employer>(userJson);
+    }
+}
+
+<style>
+    /* Thêm CSS để tùy chỉnh màu sắc cho các ô card */
+    .card {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .card-title {
+        color: #007bff;
+    }
+
+    .card-text {
+        color: #495057;
+    }
+</style>
+
+<div class="container mt-3">
+    <h2 class="text-center mb-4">Job Posting Statistics</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Monthly Job Postings</h5>
+                        <p class="card-text">Total Job Postings: <span id="totalJobPostings">0</span></p>
+                    </div>
+                    <button id="viewChartBtn" class="btn btn-primary">
+                        <i class="fas fa-chart-bar mx-1"></i>View Chart
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Monthly Applications</h5>
+                    <p class="card-text">Total Applications: <span id="totalApplications">0</span></p>
+                    <!-- Add additional details if needed -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Applications by Industry</h5>
+                    <select class="form-select" id="jobSelector">
+                        <!-- Populate job options dynamically using Javascript -->
+                    </select>
+                    <p class="card-text">Total Applications: <span id="jobApplications">0</span></p>
+                    <!-- Add additional details if needed -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="chartContainer" class="row" style="display: none;">
+        <div class="col-md-12">
+            <canvas id="jobPostingsChart" width="200" height="75"></canvas>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var employerId = "@currentUser.EmployerId";
+            var jobPostingsData = [];
+            var chartContainer = $("#chartContainer");
+            var isChartVisible = false;
+
+            getJobPostingsByEmployerId(employerId);
+
+            function getJobPostingsByEmployerId(employerId) {
+                $.ajax({
+                    url: "http://localhost:5090/odata/Job?$filter=EmployerId eq " + employerId,
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function (result) {
+                        $("#totalJobPostings").text(result.value.length);
+                        jobPostingsData = result.value;
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('Error loading job postings', xhr);
+                    }
+                });
+            }
+
+            $("#viewChartBtn").click(function () {
+                toggleChart();
+            });
+
+            function toggleChart() {
+                if (isChartVisible) {
+                    hideChart();
+                } else {
+                    showChart();
+                }
+            }
+
+            function showChart() {
+                isChartVisible = true;
+                chartContainer.show();
+
+                var monthlyJobCounts = countMonthlyJobPostings(jobPostingsData);
+
+                var ctx = document.getElementById('jobPostingsChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                        datasets: [{
+                            label: 'Monthly Job Postings',
+                            data: monthlyJobCounts,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            function hideChart() {
+                isChartVisible = false;
+                chartContainer.hide();
+            }
+
+            function countMonthlyJobPostings(jobPostings) {
+                var counts = Array(12).fill(0);
+
+                jobPostings.forEach(function (job) {
+                    var month = new Date(job.CreateDate).getMonth();
+                    counts[month]++;
+                });
+
+                return counts;
+            }
+        });
+    </script>
+}
