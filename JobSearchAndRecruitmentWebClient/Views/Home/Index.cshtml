@@ -3,99 +3,103 @@
 }
 
 <div class="row mt-3">
-    <div class="col-6">
-        <h2>Jobs</h2>
+    <input type="text" id="searchInput" placeholder="Search..." class="col-md-12 mb-3">
+    <hr />
+    <div id="jobListContainer" class="job-container col-md-4">
+    </div>
+    <div id="jobDetailsContainer" class="job-details-container col-md-8">
     </div>
 </div>
 
-<div class="row mt-3">
-    <table class="table table-sm table-striped table-bordered m-2">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Industry</th>
-                <th>Job Posting Date</th>
-                <th>Time Type</th>
-                <th>Actions</th> <!-- New column for actions -->
-                <th>Upload JobSeeker </th> <!-- New column for file upload -->
-                <th>Save Job</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
-
 @section Scripts {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            loadJobs();
+    <script>
+        function getJobList() {
+            const xhr = new XMLHttpRequest();
+            const url = 'http://localhost:5090/odata/Job';
 
-            function loadJobs() {
-                $("table tbody").html("");
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const jobs = JSON.parse(xhr.responseText).value;
+                    renderJobList(jobs);
+                }
+            };
 
-                $.ajax({
-                    url: "http://localhost:5090/odata/Job",
-                    type: "GET",
-                    contentType: "application/json",
-                    success: function (result, status, xhr) {
-                        console.log('Data received:', result.value);
-                        $.each(result.value, function (index, value) {
-                            var appendElement = $("<tr>");
-                            appendElement.append($("<td>").html(value["Title"]));
-                            appendElement.append($("<td>").html(value["Description"]));
-                            appendElement.append($("<td>").html(value["Industry"]));
-                            appendElement.append($("<td>").html(value["CreateDate"]));
-                            appendElement.append($("<td>").html(value["TimeType"]));
+            xhr.send();
+        }
 
-                            // Add view details button
-                            var viewDetailsButton = $("<button>")
-                                .text("View Details")
-                                .addClass("btn btn-info btn-sm mx-1")
-                                .on("click", function () {
-                                    // Add logic to handle view details
-                                    alert("View details clicked for JobId: " + value["JobId"]);
-                                });
-                            appendElement.append($("<td>").append(viewDetailsButton));
+        function renderJobList(jobs) {
+            const jobListContainer = document.getElementById('jobListContainer');
+            const jobDetailsContainer = document.getElementById('jobDetailsContainer');
 
-                            // Add apply button
-                            var applyButton = $("<button>")
-                                .text("Apply")
-                                .addClass("btn btn-success btn-sm mx-1")
-                                .on("click", function () {
-                                    // Add logic to handle job application
-                                    alert("Apply success for JobId: " + value["JobId"]);
-                                });
-                            appendElement.append($("<td>").append(applyButton));
+            jobListContainer.innerHTML = '';
+            jobDetailsContainer.innerHTML = '';
 
-                            // Add file upload button
-                            var uploadPDFButton = $("<input>")
-                                .attr("type", "file")
-                                .attr("accept", ".pdf")
-                                .on("change", function () {
-                                    // Add logic to handle file upload
-                                    alert("PDF uploaded for JobId: " + value["JobId"]);
-                                });
-                            appendElement.append($("<td>").append(uploadPDFButton));
+            jobs.forEach(job => {
+                const jobItem = document.createElement('div');
+                jobItem.classList.add('job-item', 'border', 'p-3', 'mb-3');
 
-                            // Add Save Job button
-                            var saveJobButton = $("<button>")
-                                .text("Save Job")
-                                .addClass("btn btn-warning btn-sm mx-1")
-                                .on("click", function () {
-                                    // Add logic to handle Save Job
-                                    alert("Job saved for JobId: " + value["JobId"]);
-                                });
-                            appendElement.append($("<td>").append(saveJobButton));
+                jobItem.addEventListener('click', function () {
+                    showJobDetails(job);
 
-                            $("tbody").append(appendElement);
-                        });
-                    },
-                    error: function (error) {
-                        console.log('Error loading jobs', error);
-                    }
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
-            }
+
+                jobItem.innerHTML = `
+                            <h3>${job.Title}</h3>
+                            <p>${job.Company}</p>
+                            <p>${job.Location}</p>
+                            <div class="time-type-container btn-dark-gray p-2 rounded text-black">
+                                ${job.TimeType}
+                            </div>
+                            <p>${job.Description}</p>
+                        `;
+                jobListContainer.appendChild(jobItem);
+            });
+        }
+
+        function showJobDetails(job) {
+            const jobDetailsContainer = document.getElementById('jobDetailsContainer');
+            jobDetailsContainer.innerHTML = '';
+
+            const jobDetails = document.createElement('div');
+            jobDetails.classList.add('job-details', 'p-3');
+            jobDetails.innerHTML = `
+                        <h2>${job.Title}</h2>
+                        <p>${job.Company}</p>
+                        <p>${job.Location}</p>
+                        <div class="button-row">
+                            <button class="btn btn-success" onclick="applyForJob()">Apply</button>
+                            <button class="btn btn-secondary" onclick="saveJob()">SavedJob</button>
+                        </div>
+                        <hr />
+                        <h3>Mô tả chi tiết công việc</h3>
+                        <p>${job.Description}</p>
+                        <div class="time-type-container btn-dark-gray p-2 rounded text-black">
+                            ${job.TimeType}
+                        </div>
+                        <hr />
+                        <p><em>Ngành nghề: </em>${job.Industry}</p>
+                        <p><em>Yêu cầu kỹ năng: </em>${job.RequiredSkills}</p>
+                        <p><em>Trình độ học vấn: </em>${job.RequiredEducation}</p>
+                        <p><em>Mức lương: </em>${job.Salary}$<em>/tháng</em></p>
+                    `;
+            jobDetailsContainer.appendChild(jobDetails);
+        }
+
+        function applyForJob() {
+            alert('Đã nộp đơn thành công!');
+        }
+
+        function saveJob() {
+            alert('Đã lưu công việc!');
+        }
+
+        getJobList();
+
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
         });
     </script>
 }
